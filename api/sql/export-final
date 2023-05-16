@@ -1,0 +1,573 @@
+CREATE TABLE public."CarRides" (
+    id bigint NOT NULL,
+    coordinates jsonb,
+    "availabilityDate" timestamp with time zone,
+    "requestDate" timestamp with time zone,
+    status character varying(25),
+    observations jsonb,
+    driver character varying(50),
+    passenger character varying(50),
+    tip numeric DEFAULT 0,
+    "observationsDriver" jsonb,
+    "finalComments" jsonb,
+    organization character varying(25)
+);
+
+
+ALTER TABLE public."CarRides" OWNER TO postgres;
+
+--
+-- Name: CarRides_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."CarRides_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."CarRides_id_seq" OWNER TO postgres;
+
+--
+-- Name: CarRides_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."CarRides_id_seq" OWNED BY public."CarRides".id;
+
+
+--
+-- Name: Groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Groups" (
+    id bigint NOT NULL,
+    code character varying(50) NOT NULL,
+    name character varying(100) NOT NULL,
+    address character varying(100) NOT NULL,
+    phones character varying(25)[] DEFAULT (ARRAY[]::character varying[])::character varying(25)[],
+    details jsonb DEFAULT '{}'::jsonb,
+    "codeOrganization" character varying(25),
+    alicuota numeric NOT NULL
+);
+
+
+ALTER TABLE public."Groups" OWNER TO postgres;
+
+--
+-- Name: Groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Groups_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Groups_id_seq" OWNER TO postgres;
+
+--
+-- Name: Groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Groups_id_seq" OWNED BY public."Groups".id;
+
+
+--
+-- Name: ImageUsers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ImageUsers" (
+    id integer NOT NULL,
+    url text NOT NULL,
+    type character varying(25) NOT NULL,
+    reference character varying(100) NOT NULL,
+    username character varying(50),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public."ImageUsers" OWNER TO postgres;
+
+--
+-- Name: ImageUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."ImageUsers_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."ImageUsers_id_seq" OWNER TO postgres;
+
+--
+-- Name: ImageUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."ImageUsers_id_seq" OWNED BY public."ImageUsers".id;
+
+
+--
+-- Name: Organizations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Organizations" (
+    id bigint NOT NULL,
+    code character varying(25) NOT NULL,
+    address character varying(100) NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public."Organizations" OWNER TO postgres;
+
+--
+-- Name: Organizations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Organizations_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Organizations_id_seq" OWNER TO postgres;
+
+--
+-- Name: Organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Organizations_id_seq" OWNED BY public."Organizations".id;
+
+
+--
+-- Name: Roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Roles" (
+    id bigint NOT NULL,
+    code character varying(50) NOT NULL,
+    name character varying(50) NOT NULL,
+    permissions character varying(75)[]
+);
+
+
+ALTER TABLE public."Roles" OWNER TO postgres;
+
+--
+-- Name: Roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Roles_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Roles_id_seq" OWNER TO postgres;
+
+--
+-- Name: Roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Roles_id_seq" OWNED BY public."Roles".id;
+
+
+--
+-- Name: SequelizeMeta; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."SequelizeMeta" (
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public."SequelizeMeta" OWNER TO postgres;
+
+--
+-- Name: UserGroups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."UserGroups" (
+    id bigint NOT NULL,
+    username character varying(50),
+    "codeGroup" character varying(50)
+);
+
+
+ALTER TABLE public."UserGroups" OWNER TO postgres;
+
+--
+-- Name: UserGroups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."UserGroups_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."UserGroups_id_seq" OWNER TO postgres;
+
+--
+-- Name: UserGroups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."UserGroups_id_seq" OWNED BY public."UserGroups".id;
+
+
+--
+-- Name: UserRoles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."UserRoles" (
+    id bigint NOT NULL,
+    username character varying(50),
+    "codeRole" character varying(50)
+);
+
+
+ALTER TABLE public."UserRoles" OWNER TO postgres;
+
+--
+-- Name: UserRoles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."UserRoles_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."UserRoles_id_seq" OWNER TO postgres;
+
+--
+-- Name: UserRoles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."UserRoles_id_seq" OWNED BY public."UserRoles".id;
+
+
+--
+-- Name: Users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Users" (
+    id bigint NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(255) NOT NULL,
+    "idCard" character varying(50) NOT NULL,
+    "fullName" character varying(150) NOT NULL,
+    email character varying(100) NOT NULL,
+    details jsonb DEFAULT '{}'::jsonb,
+    session jsonb DEFAULT '{}'::jsonb,
+    "codeOrganization" character varying(25),
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    "pointsPassenger" numeric DEFAULT 0,
+    "pointsDriver" numeric DEFAULT 0,
+     careers numeric DEFAULT 0
+);
+
+
+ALTER TABLE public."Users" OWNER TO postgres;
+
+--
+-- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Users_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Users_id_seq" OWNER TO postgres;
+
+--
+-- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Users_id_seq" OWNED BY public."Users".id;
+
+--
+-- Name: Pagos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Pagos" (
+    id bigint NOT NULL,
+    valor numeric NOT NULL,
+    "groupCode" character varying(25),
+    "fechaEmision" timestamp with time zone NOT NULL,
+    estado character varying(10) NOT NULL
+);
+
+
+ALTER TABLE public."Pagos" OWNER TO postgres;
+
+--
+-- Name: Pagos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Pagos_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Pagos_id_seq" OWNER TO postgres;
+
+--
+-- Name: Pagos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Pagos_id_seq" OWNED BY public."Pagos".id;
+
+
+--
+-- Name: CarRides id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CarRides" ALTER COLUMN id SET DEFAULT nextval('public."CarRides_id_seq"'::regclass);
+
+
+--
+-- Name: Groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Groups" ALTER COLUMN id SET DEFAULT nextval('public."Groups_id_seq"'::regclass);
+
+
+--
+-- Name: ImageUsers id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ImageUsers" ALTER COLUMN id SET DEFAULT nextval('public."ImageUsers_id_seq"'::regclass);
+
+
+--
+-- Name: Organizations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations" ALTER COLUMN id SET DEFAULT nextval('public."Organizations_id_seq"'::regclass);
+
+
+--
+-- Name: Roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Roles" ALTER COLUMN id SET DEFAULT nextval('public."Roles_id_seq"'::regclass);
+
+
+--
+-- Name: UserGroups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserGroups" ALTER COLUMN id SET DEFAULT nextval('public."UserGroups_id_seq"'::regclass);
+
+
+--
+-- Name: UserRoles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserRoles" ALTER COLUMN id SET DEFAULT nextval('public."UserRoles_id_seq"'::regclass);
+
+
+--
+-- Name: Users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users" ALTER COLUMN id SET DEFAULT nextval('public."Users_id_seq"'::regclass);
+
+--
+-- Name: Pagos id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pagos" ALTER COLUMN id SET DEFAULT nextval('public."Pagos_id_seq"'::regclass);
+
+
+--
+-- Name: Groups Groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Groups"
+    ADD CONSTRAINT "Groups_pkey" PRIMARY KEY (code);
+
+
+--
+-- Name: ImageUsers ImageUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ImageUsers"
+    ADD CONSTRAINT "ImageUsers_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Organizations"
+    ADD CONSTRAINT "Organizations_pkey" PRIMARY KEY (code);
+
+
+--
+-- Name: Roles Roles_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Roles"
+    ADD CONSTRAINT "Roles_name_key" UNIQUE (name);
+
+
+--
+-- Name: Roles Roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Roles"
+    ADD CONSTRAINT "Roles_pkey" PRIMARY KEY (code);
+
+
+--
+-- Name: SequelizeMeta SequelizeMeta_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SequelizeMeta"
+    ADD CONSTRAINT "SequelizeMeta_pkey" PRIMARY KEY (name);
+
+
+--
+-- Name: UserGroups UserGroups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserGroups"
+    ADD CONSTRAINT "UserGroups_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: UserRoles UserRoles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserRoles"
+    ADD CONSTRAINT "UserRoles_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_pkey" PRIMARY KEY (username);
+
+--
+-- Name: Users Pagos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pagos"
+    ADD CONSTRAINT "Pagos_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: CarRides CarRides_organization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CarRides"
+    ADD CONSTRAINT "CarRides_organization_fkey" FOREIGN KEY (organization) REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: CarRides CarRides_passenger_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CarRides"
+    ADD CONSTRAINT "CarRides_passenger_fkey" FOREIGN KEY (passenger) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: Groups Groups_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Groups"
+    ADD CONSTRAINT "Groups_codeOrganization_fkey" FOREIGN KEY ("codeOrganization") REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: ImageUsers ImageUsers_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ImageUsers"
+    ADD CONSTRAINT "ImageUsers_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: UserGroups UserGroups_codeGroup_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserGroups"
+    ADD CONSTRAINT "UserGroups_codeGroup_fkey" FOREIGN KEY ("codeGroup") REFERENCES public."Groups"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: UserGroups UserGroups_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserGroups"
+    ADD CONSTRAINT "UserGroups_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: UserRoles UserRoles_codeRole_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserRoles"
+    ADD CONSTRAINT "UserRoles_codeRole_fkey" FOREIGN KEY ("codeRole") REFERENCES public."Roles"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: UserRoles UserRoles_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserRoles"
+    ADD CONSTRAINT "UserRoles_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: Users Users_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_codeOrganization_fkey" FOREIGN KEY ("codeOrganization") REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+--
+-- Name: Users Users_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pagos"
+    ADD CONSTRAINT "Pagos_groupCode_fkey" FOREIGN KEY ("groupCode") REFERENCES public."Groups"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- PostgreSQL database cluster dump complete
+--
