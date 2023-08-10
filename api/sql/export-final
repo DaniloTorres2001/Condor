@@ -7,10 +7,10 @@ CREATE TABLE public."CarRides" (
     observations jsonb,
     driver character varying(50),
     passenger character varying(50),
-    tip numeric DEFAULT 0,
+    pay numeric DEFAULT 0, -- changed for tip
     "observationsDriver" jsonb,
     "finalComments" jsonb,
-    organization character varying(25)
+    urbanization character varying(25) -- change for organization
 );
 
 
@@ -41,25 +41,25 @@ ALTER SEQUENCE public."CarRides_id_seq" OWNED BY public."CarRides".id;
 -- Name: Groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."Groups" (
+CREATE TABLE public."Families" (  -- change for Group
     id bigint NOT NULL,
     code character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
     address character varying(100) NOT NULL,
     phones character varying(25)[] DEFAULT (ARRAY[]::character varying[])::character varying(25)[],
     details jsonb DEFAULT '{}'::jsonb,
-    "codeOrganization" character varying(25),
-    alicuota numeric NOT NULL
+    "codeUrbanization" character varying(25), -- change for organization
+    aliquot numeric NOT NULL -- change for alicuota
 );
 
 
-ALTER TABLE public."Groups" OWNER TO postgres;
+ALTER TABLE public."Families" OWNER TO postgres;  -- change for Group
 
 --
--- Name: Groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: Families_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."Groups_id_seq"
+CREATE SEQUENCE public."Families_id_seq" -- change for Group
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -67,13 +67,13 @@ CREATE SEQUENCE public."Groups_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Groups_id_seq" OWNER TO postgres;
+ALTER TABLE public."Families_id_seq" OWNER TO postgres; -- change for Group
 
 --
--- Name: Groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: Families_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."Groups_id_seq" OWNED BY public."Groups".id;
+ALTER SEQUENCE public."Families_id_seq" OWNED BY public."Families".id;  -- change for Group
 
 
 --
@@ -116,10 +116,10 @@ ALTER SEQUENCE public."ImageUsers_id_seq" OWNED BY public."ImageUsers".id;
 
 
 --
--- Name: Organizations; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Urbanization; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."Organizations" (
+CREATE TABLE public."Urbanizations" ( -- change for Organizations
     id bigint NOT NULL,
     code character varying(25) NOT NULL,
     address character varying(100) NOT NULL,
@@ -127,13 +127,13 @@ CREATE TABLE public."Organizations" (
 );
 
 
-ALTER TABLE public."Organizations" OWNER TO postgres;
+ALTER TABLE public."Urbanizations" OWNER TO postgres; -- change for Organizations
 
 --
--- Name: Organizations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: Urbanizations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."Organizations_id_seq"
+CREATE SEQUENCE public."Urbanizations_id_seq" -- change for Organizations
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -141,13 +141,13 @@ CREATE SEQUENCE public."Organizations_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Organizations_id_seq" OWNER TO postgres;
+ALTER TABLE public."Urbanizations_id_seq" OWNER TO postgres; -- change for Organizations
 
 --
--- Name: Organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: Urbanizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."Organizations_id_seq" OWNED BY public."Organizations".id;
+ALTER SEQUENCE public."Urbanizations_id_seq" OWNED BY public."Urbanizations".id; -- change for Organizations
 
 
 --
@@ -197,23 +197,23 @@ CREATE TABLE public."SequelizeMeta" (
 ALTER TABLE public."SequelizeMeta" OWNER TO postgres;
 
 --
--- Name: UserGroups; Type: TABLE; Schema: public; Owner: postgres
+-- Name: UserFamilies; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."UserGroups" (
+CREATE TABLE public."UserFamilies" ( -- change for Group
     id bigint NOT NULL,
     username character varying(50),
-    "codeGroup" character varying(50)
+    "codeFamily" character varying(50) -- change for Group
 );
 
 
-ALTER TABLE public."UserGroups" OWNER TO postgres;
+ALTER TABLE public."UserFamilies" OWNER TO postgres;  -- change for Group
 
 --
--- Name: UserGroups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: UserFamilies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."UserGroups_id_seq"
+CREATE SEQUENCE public."UserFamilies_id_seq" -- change for Group
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -221,13 +221,13 @@ CREATE SEQUENCE public."UserGroups_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."UserGroups_id_seq" OWNER TO postgres;
+ALTER TABLE public."UserFamilies_id_seq" OWNER TO postgres; -- change for Group
 
 --
--- Name: UserGroups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: UserFamilies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."UserGroups_id_seq" OWNED BY public."UserGroups".id;
+ALTER SEQUENCE public."UserFamilies_id_seq" OWNED BY public."UserFamilies".id; -- change for Group
 
 
 --
@@ -277,7 +277,7 @@ CREATE TABLE public."Users" (
     email character varying(100) NOT NULL,
     details jsonb DEFAULT '{}'::jsonb,
     session jsonb DEFAULT '{}'::jsonb,
-    "codeOrganization" character varying(25),
+    "codeUrbanization" character varying(25),
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
     "pointsPassenger" numeric DEFAULT 0,
@@ -309,25 +309,25 @@ ALTER TABLE public."Users_id_seq" OWNER TO postgres;
 ALTER SEQUENCE public."Users_id_seq" OWNED BY public."Users".id;
 
 --
--- Name: Pagos; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Payments; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public."Pagos" (
+CREATE TABLE public."Payments" ( -- change for Pagos
     id bigint NOT NULL,
-    valor numeric NOT NULL,
-    "groupCode" character varying(25),
-    "fechaEmision" timestamp with time zone NOT NULL,
-    estado character varying(10) NOT NULL
+    payValue numeric NOT NULL,
+    "familyCode" character varying(25), -- change for group
+    "issueDate" timestamp with time zone NOT NULL,
+    stateUser character varying(10) NOT NULL
 );
 
 
-ALTER TABLE public."Pagos" OWNER TO postgres;
+ALTER TABLE public."Payments" OWNER TO postgres; -- change for Pagos
 
 --
--- Name: Pagos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: Payments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public."Pagos_id_seq"
+CREATE SEQUENCE public."Payments_id_seq" -- change for Pagos
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -335,13 +335,13 @@ CREATE SEQUENCE public."Pagos_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."Pagos_id_seq" OWNER TO postgres;
+ALTER TABLE public."Payments_id_seq" OWNER TO postgres; -- change for Pagos
 
 --
 -- Name: Pagos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public."Pagos_id_seq" OWNED BY public."Pagos".id;
+ALTER SEQUENCE public."Payments_id_seq" OWNED BY public."Payments".id; -- change for Pagos
 
 
 --
@@ -352,10 +352,10 @@ ALTER TABLE ONLY public."CarRides" ALTER COLUMN id SET DEFAULT nextval('public."
 
 
 --
--- Name: Groups id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: Families id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Groups" ALTER COLUMN id SET DEFAULT nextval('public."Groups_id_seq"'::regclass);
+ALTER TABLE ONLY public."Families" ALTER COLUMN id SET DEFAULT nextval('public."Families_id_seq"'::regclass); -- change for Groups
 
 
 --
@@ -366,10 +366,10 @@ ALTER TABLE ONLY public."ImageUsers" ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: Organizations id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: Urbanizations id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Organizations" ALTER COLUMN id SET DEFAULT nextval('public."Organizations_id_seq"'::regclass);
+ALTER TABLE ONLY public."Urbanizations" ALTER COLUMN id SET DEFAULT nextval('public."Urbanizations_id_seq"'::regclass); -- change for Organizations
 
 
 --
@@ -383,7 +383,7 @@ ALTER TABLE ONLY public."Roles" ALTER COLUMN id SET DEFAULT nextval('public."Rol
 -- Name: UserGroups id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."UserGroups" ALTER COLUMN id SET DEFAULT nextval('public."UserGroups_id_seq"'::regclass);
+ALTER TABLE ONLY public."UserFamilies" ALTER COLUMN id SET DEFAULT nextval('public."UserFamilies_id_seq"'::regclass); -- change for Groups
 
 
 --
@@ -403,15 +403,15 @@ ALTER TABLE ONLY public."Users" ALTER COLUMN id SET DEFAULT nextval('public."Use
 -- Name: Pagos id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Pagos" ALTER COLUMN id SET DEFAULT nextval('public."Pagos_id_seq"'::regclass);
+ALTER TABLE ONLY public."Payments" ALTER COLUMN id SET DEFAULT nextval('public."Payments_id_seq"'::regclass); -- change for Pagos
 
 
 --
--- Name: Groups Groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Families Families_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Groups"
-    ADD CONSTRAINT "Groups_pkey" PRIMARY KEY (code);
+ALTER TABLE ONLY public."Families" -- change for Groups
+    ADD CONSTRAINT "Families_pkey" PRIMARY KEY (code); 
 
 
 --
@@ -423,11 +423,11 @@ ALTER TABLE ONLY public."ImageUsers"
 
 
 --
--- Name: Organizations Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Urbanizations  Urbanizations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Organizations"
-    ADD CONSTRAINT "Organizations_pkey" PRIMARY KEY (code);
+ALTER TABLE ONLY public."Urbanizations" -- change for Organizations
+    ADD CONSTRAINT "Urbanizations_pkey" PRIMARY KEY (code);
 
 
 --
@@ -458,8 +458,8 @@ ALTER TABLE ONLY public."SequelizeMeta"
 -- Name: UserGroups UserGroups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."UserGroups"
-    ADD CONSTRAINT "UserGroups_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."UserFamilies"  -- change for Groups
+    ADD CONSTRAINT "UserFamilies_pkey" PRIMARY KEY (id);
 
 
 --
@@ -481,16 +481,18 @@ ALTER TABLE ONLY public."Users"
 -- Name: Users Pagos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Pagos"
-    ADD CONSTRAINT "Pagos_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."Payments" -- change for Pagos
+    ADD CONSTRAINT "Payments_pkey" PRIMARY KEY (id);
 
 
+ALTER TABLE public."Payments"
+    ADD CONSTRAINT "Payments_payValue_unique" UNIQUE (payValue);
 --
--- Name: CarRides CarRides_organization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: CarRides CarRides_urbanization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."CarRides"
-    ADD CONSTRAINT "CarRides_organization_fkey" FOREIGN KEY (organization) REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "CarRides_urbanization_fkey" FOREIGN KEY (urbanization) REFERENCES public."Urbanizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -500,14 +502,24 @@ ALTER TABLE ONLY public."CarRides"
 ALTER TABLE ONLY public."CarRides"
     ADD CONSTRAINT "CarRides_passenger_fkey" FOREIGN KEY (passenger) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
 
+--
+-- Name: CarRides CarRides_passenger_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."CarRides"
+    ADD CONSTRAINT "CarRides_payments_fkey" FOREIGN KEY (pay) REFERENCES public."Payments"(payValue) ON UPDATE CASCADE ON DELETE CASCADE;
+
 
 --
--- Name: Groups Groups_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Families Families_codeUrbanization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Groups"
-    ADD CONSTRAINT "Groups_codeOrganization_fkey" FOREIGN KEY ("codeOrganization") REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Families" -- change for Groups
+    ADD CONSTRAINT "Families_codeUrbanization_fkey" FOREIGN KEY ("codeUrbanization") REFERENCES public."Urbanizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
 
+
+ALTER TABLE public."Families"
+    ADD CONSTRAINT "Families_code_unique" UNIQUE ("code");
 
 --
 -- Name: ImageUsers ImageUsers_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
@@ -517,20 +529,22 @@ ALTER TABLE ONLY public."ImageUsers"
     ADD CONSTRAINT "ImageUsers_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
+
+
 --
--- Name: UserGroups UserGroups_codeGroup_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: UserFamilies UserFamilies_codeFamily_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."UserGroups"
-    ADD CONSTRAINT "UserGroups_codeGroup_fkey" FOREIGN KEY ("codeGroup") REFERENCES public."Groups"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserFamilies" -- change for Groups
+    ADD CONSTRAINT "UserFamilies_codeFamily_fkey" FOREIGN KEY ("codeFamily") REFERENCES public."Families"(code) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
 -- Name: UserGroups UserGroups_username_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."UserGroups"
-    ADD CONSTRAINT "UserGroups_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."UserFamilies" -- change for Groups
+    ADD CONSTRAINT "UserFamilies_username_fkey" FOREIGN KEY (username) REFERENCES public."Users"(username) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -550,18 +564,18 @@ ALTER TABLE ONLY public."UserRoles"
 
 
 --
--- Name: Users Users_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Users Users_codeUrbanization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Users"
-    ADD CONSTRAINT "Users_codeOrganization_fkey" FOREIGN KEY ("codeOrganization") REFERENCES public."Organizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Users" -- change for Organization
+    ADD CONSTRAINT "Users_codeUrbanization_fkey" FOREIGN KEY ("codeUrbanization") REFERENCES public."Urbanizations"(code) ON UPDATE CASCADE ON DELETE CASCADE;
 
 --
--- Name: Users Users_codeOrganization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Payments Payments_familyCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public."Pagos"
-    ADD CONSTRAINT "Pagos_groupCode_fkey" FOREIGN KEY ("groupCode") REFERENCES public."Groups"(code) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public."Payments"  -- change for pagos
+    ADD CONSTRAINT "Payments_familyCode_fkey" FOREIGN KEY ("familyCode") REFERENCES public."Families"(code) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
