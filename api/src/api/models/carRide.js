@@ -35,14 +35,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSONB,
         defaultValue: {},
       },
-      tip: {
+      pay: {
         type: DataTypes.FLOAT,
         defaultValue: 0,
       },
       finalComments: {
         type: DataTypes.JSONB 
       },
-      organization: {
+      urbanization: {
         type: DataTypes.STRING(50)
       }, 
     },

@@ -32,10 +32,10 @@ import SearchBar from "../../components/SearchBarTable";
 import Page from "../../components/app/Page";
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
-export default function Organization() {
-  const [organizations, setOrganizations] = useState({});
+export default function Urbanization() {
+  const [urbanizations, setUrbanizations] = useState({});
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] = useState({});
+  const [selectedUrbanization, setSelectedUrbanization] = useState({});
 
   // Pag
   const [page, setPage] = useState(0);
@@ -52,15 +52,15 @@ export default function Organization() {
   };
 
   useEffect(() => {
-    fetchOrganizations(page, rowsPerPage);
+    fetchUrbanizations(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
 
-  const fetchOrganizations = async (pages, row, filterSearch) => {
+  const fetchUrbanizations = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/organizations?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/Urbanizations?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -69,7 +69,7 @@ export default function Organization() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setOrganizations(response.data?.results);
+        setUrbanizations(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -80,8 +80,8 @@ export default function Organization() {
     }
   };
 
-  const handleOpenDeleteDialog = (organization) => {
-    setSelectedOrganization(organization);
+  const handleOpenDeleteDialog = (urbanization) => {
+    setSelectedUrbanization(urbanization);
     setDeleteDialog(true);
   };
 
@@ -89,9 +89,9 @@ export default function Organization() {
     setDeleteDialog(false);
   };
 
-  const handleDeleteOrganization = async () => {
+  const handleDeleteUrbanization = async () => {
     const response = await sendRequest(
-      `${urlApi}/organizations/${selectedOrganization?.id}`,
+      `${urlApi}/urbanizations/${selectedUrbanization?.id}`,
       null,
       "DELETE",
       true
@@ -102,7 +102,7 @@ export default function Organization() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        fetchOrganizations(page, rowsPerPage);
+        fetchUrbanizations(page, rowsPerPage);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -114,7 +114,7 @@ export default function Organization() {
   };
 
   const handleFilterSearch = (filterSearch) => {
-    fetchOrganizations(page, rowsPerPage, filterSearch);
+    fetchUrbanizations(page, rowsPerPage, filterSearch);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -134,7 +134,7 @@ export default function Organization() {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Está seguro de eliminar la ubanización "{selectedOrganization?.name}"?
+        Está seguro de eliminar la ubanización "{selectedUrbanization?.name}"?
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
@@ -144,7 +144,7 @@ export default function Organization() {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDeleteDialog}>Cancelar</Button>
-        <Button onClick={handleDeleteOrganization} autoFocus>
+        <Button onClick={handleDeleteUrbanization} autoFocus>
           Aceptar
         </Button>
       </DialogActions>
@@ -195,7 +195,7 @@ export default function Organization() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {organizations?.organizations?.map((row) => (
+                  {urbanizations?.urbanizations?.map((row) => (
                     <TableRow hover
                       key={row.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -220,7 +220,7 @@ export default function Organization() {
             </TableContainer>
             <TablePagination
               component="div"
-              count={organizations?.pagination?.totalItems ?? 0}
+              count={urbanizations?.pagination?.totalItems ?? 0}
               page={page}
               labelRowsPerPage={"Items por página"}
               onPageChange={handleChangePage}

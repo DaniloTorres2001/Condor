@@ -11,8 +11,8 @@ const carRideValidation = (data) => {
     timeZoneName: Joi.string(),
     status: Joi.string().max(25),
     observations: Joi.object(),
-    tip: Joi.number(),
-    organization: Joi.string().max(25)
+    pay: Joi.number(),
+    urbanization: Joi.string().max(25)
   }).options({ abortEarly: false });
 
   return schema.validate(data);

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const validateOrganization = (data, updating = false) => { 
+const validateUrbanization = (data, updating = false) => { 
   const scheme = Joi.object({
     ...(!updating && { code: Joi.string().max(25).required() }),
     name: Joi.string().max(50).required(),
@@ -11,5 +11,5 @@ const validateOrganization = (data, updating = false) => {
 };
 
 module.exports = {
-  validateOrganization,
+  validateUrbanization,
 };

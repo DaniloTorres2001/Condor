@@ -35,11 +35,11 @@ import { sendRequest } from "../../utils/utils";
 
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
-export default function Groups() {
-  const [groups, setGroups] = useState([]);
-  const [pagos, setPagos] = useState([]);
+export default function Families() {
+  const [families, setFamilies] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState({});
+  const [selectedFamily, setSelectedFamily] = useState({});
 
   
 
@@ -58,16 +58,16 @@ export default function Groups() {
   };
 
   useEffect(() => {
-    fetchGroups(page, rowsPerPage);
-    fetchPagos(page, rowsPerPage);
+    fetchFamilies(page, rowsPerPage);
+    fetchPayments(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
 
-  const fetchGroups = async (pages, row, filterSearch) => {
+  const fetchFamilies = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/groups?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/families?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -76,7 +76,7 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setGroups(response.data?.results);
+        setFamilies(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -88,11 +88,11 @@ export default function Groups() {
     }
   };
 
-  const fetchPagos = async (pages, row, filterSearch) => {
+  const fetchPayments = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/pagos?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/payments?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -101,7 +101,7 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setPagos(response.data?.results);
+        setPayments(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -113,8 +113,8 @@ export default function Groups() {
     }
   };
 
-  const handleOpenDeleteDialog = (group) => {
-    setSelectedGroup(group);
+  const handleOpenDeleteDialog = (family) => {
+    setSelectedFamily(family);
     setDeleteDialog(true);
   };
 
@@ -132,12 +132,12 @@ export default function Groups() {
   };
 
   const handleFilterSearch = (filterSearch) => {
-    fetchPagos(page, rowsPerPage, filterSearch);
+    fetchPayments(page, rowsPerPage, filterSearch);
   };
 
-  const handleDeleteGroup = async () => {
+  const handleDeleteFamily = async () => {
     const response = await sendRequest(
-      `${urlApi}/groups/${selectedGroup.id}`,
+      `${urlApi}/families/${selectedFamily.id}`,
       null,
       "DELETE",
       true
@@ -148,7 +148,7 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        fetchGroups(page, rowsPerPage);
+        fetchFamilies(page, rowsPerPage);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -168,17 +168,17 @@ export default function Groups() {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Está seguro de eliminar el grupo "{selectedGroup?.name}"?
+        Está seguro de eliminar la familia "{selectedFamily?.name}"?
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Si da click en 'aceptar', el grupo se eliminará de manera definitiva y
+          Si da click en 'aceptar', la familia se eliminará de manera definitiva y
           no se podrán revertir los cambios.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDeleteDialog}>Cancelar</Button>
-        <Button onClick={handleDeleteGroup} autoFocus>
+        <Button onClick={handleDeleteFamily} autoFocus>
           Aceptar
         </Button>
       </DialogActions>
@@ -237,7 +237,7 @@ export default function Groups() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {groups?.groups?.map((row) => (
+                {families?.families?.map((row) => (
                   <TableRow hover
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -248,34 +248,34 @@ export default function Groups() {
                     </TableCell>
                     <TableCell>{row.name}</TableCell>
                     <TableCell>{row.address}</TableCell>
-                    <TableCell>${row.alicuota}</TableCell>
+                    <TableCell>${row.aliquot}</TableCell>
                     <TableCell>
                       $
-                      {pagos?.pagos?.reduce((acc, row2) => {
-                        if (row2.groupCode === row.code && row2.estado === "pasajero") {
-                          return acc + Number(row2.valor);
+                      {payments?.payments?.reduce((acc, row2) => {
+                        if (row2.familyCode === row.code && row2.stateuser === "pasajero") {
+                          return acc + Number(row2.payvalue);
                         }
                         return acc;
                       }, 0)}
                     </TableCell>
                     <TableCell>
                       $
-                      {pagos?.pagos?.reduce((acc, row2) => {
-                        if (row2.groupCode === row.code && row2.estado === "conductor") {
-                          return acc + Number(row2.valor);
+                      {payments?.payments?.reduce((acc, row2) => {
+                        if (row2.familyCode === row.code && row2.stateuser === "conductor") {
+                          return acc + Number(row2.payvalue);
                         }
                         return acc;
                       }, 0)}
                     </TableCell>
                     <TableCell>$
-                      {Number(row.alicuota) + Number(pagos?.pagos?.reduce((acc, row2) => {
-                          if (row2.groupCode === row.code && row2.estado === "pasajero") {
-                              return acc + Number(row2.valor);
+                      {Number(row.aliquot) + Number(payments?.payments?.reduce((acc, row2) => {
+                          if (row2.familyCode === row.code && row2.stateuser === "pasajero") {
+                              return acc + Number(row2.payvalue);
                           }
                           return acc;
-                      }, 0)) - Number(pagos?.pagos?.reduce((acc, row2) => {
-                          if (row2.groupCode === row.code && row2.estado === "conductor") {
-                              return acc + Number(row2.valor);
+                      }, 0)) - Number(payments?.payments?.reduce((acc, row2) => {
+                          if (row2.familyCode === row.code && row2.stateuser === "conductor") {
+                              return acc + Number(row2.payvalue);
                           }
                           return acc;
                       }, 0))}
@@ -295,7 +295,7 @@ export default function Groups() {
 
           <TablePagination
             component="div"
-            count={groups?.pagination?.totalItems ?? 0}
+            count={families?.pagination?.totalItems ?? 0}
             page={page}
             labelRowsPerPage={"Items por página"}
             onPageChange={handleChangePage}

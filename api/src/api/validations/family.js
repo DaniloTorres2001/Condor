@@ -1,26 +1,26 @@
 const Joi = require("joi");
 
-const groupValidation = (data, updating = false) => {
+const familyValidation = (data, updating = false) => {
   const schema = Joi.object({
     ...(!updating && { code: Joi.string().max(50).required() }),
     name: Joi.string().max(100).required(),
     address: Joi.string().max(100).required(),
     phones: Joi.array().items(Joi.string()),
-    alicuota: Joi.number().required(),
-    // codeOrganization: Joi.string().max(25).required(),
+    aliquot: Joi.number().required(),
+    // codeUrbanization: Joi.string().max(25).required(),
     details: Joi.object(),
   }).options({ abortEarly: false });
 
   return schema.validate(data);
 };
 
-const assignGroupValidation = (data) => {
+const assignFamilyValidation = (data) => {
   const schema = Joi.object({
     username: Joi.string().max(50).required(),
-    codeGroup: Joi.string().max(50).required(),
+    codeFamily: Joi.string().max(50).required(),
   }).options({ abortEarly: false });
 
   return schema.validate(data);
 };
 
-module.exports = { groupValidation, assignGroupValidation };
+module.exports = { familyValidation, assignFamilyValidation };

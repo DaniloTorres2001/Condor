@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Group = sequelize.define(
-    "Group",
+  const Family = sequelize.define(
+    "Family",
     {
       id: {
         type: DataTypes.BIGINT,
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: {},
       },
 
-      alicuota: {
+      aliquot: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
@@ -41,25 +41,25 @@ module.exports = (sequelize, DataTypes) => {
     { timestamps: false }
   );
 
-  Group.associate = (model) => {
-    Group.belongsToMany(model.User, {
-      through: model.UserGroup,
+  Family.associate = (model) => {
+    Family.belongsToMany(model.User, {
+      through: model.UserFamily,
       foreignKey: {
-        name: "codeGroup",
+        name: "codeFamily",
       },
     });
 
-    Group.hasOne(model.Pago, {
+    Family.hasOne(model.Payment, {
       foreignKey: {
-        name: "groupCode",
+        name: "familyCode",
       },
-      as: "GroupCode",
+      as: "FamilyCode",
     });
 
-    Group.belongsTo(model.Organization, {
-      foreignKey: "codeOrganization",
+    Family.belongsTo(model.Urbanization, {
+      foreignKey: "codeUrbanization",
     });
   };
 
-  return Group;
+  return Family;
 };

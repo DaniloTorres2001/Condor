@@ -23,19 +23,19 @@ const sidebarConfig = [
   },
   {
     title: "Familias",
-    path: "/dashboard/groups",
+    path: "/dashboard/families",
     icon: <GroupsIcon />,
     role: ["002"],
   },
   {
     title: "Urbanizaciones",
-    path: "/dashboard/organizations",
+    path: "/dashboard/urbanizations",
     icon: <AccountBalanceIcon />,
     role: ["001"],
   },
   {
     title: "Detalles de Carreras",
-    path: "/dashboard/pagos",
+    path: "/dashboard/payments",
     icon: <DriveEtaIcon />,
     role: ["002"],
   },

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-const { User, Organization} = require("../models");
+const { User, Urbanization} = require("../models");
 const { registerValidation, loginValidation } = require("../validations/auth");
 const { createToken } = require("../utils/utils");
 
@@ -26,7 +26,7 @@ const login = async (req, res) => {
       where: {
         [Op.or]: [{ username }, { email: username }],
       }, include: [
-        Organization
+        Urbanization
       ]
     });
 
@@ -48,7 +48,7 @@ const login = async (req, res) => {
     const token = createToken({
       id: user.id,
       username: user.username,
-      codeOrganization: user.codeOrganization,
+      codeUrbanization: user.codeUrbanization,
       roles: roles,
     }, req.body?.mode ? "30d" : "");  
     let userReturn = user.dataValues
