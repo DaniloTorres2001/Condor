@@ -1,6 +1,6 @@
-const { User, Group, UserGroup, Organization } = require("../models");
+const {  Family, Urbanization } = require("../models");
 const { Op } = require("sequelize");
-const { groupValidation } = require("../validations/group");
+const { familyValidation } = require("../validations/family");
 const { getPagination, getPagingData } = require("../utils/pagination");
 
 const {
@@ -10,45 +10,45 @@ const {
 } = require("../utils/responseApi");
 
 const create = async (req, res) => {
-  const { error } = groupValidation(req.body);
+  const { error } = familyValidation(req.body);
 
   if (error)
     return res
       .status(422)
       .json(validationResponse(error.details.map((e) => e.message)));
 
-  const group = await Group.findOne({
+  const family = await Family.findOne({
     where: {
       [Op.or]: [{ code: req.body.code }, { name: req.body.name }],
     },
   });
 
-  if (group)
+  if (family)
     return res
       .status(422)
       .json(validationResponse(["Código o nombre ya existe"]));
 
-  const organization = await Organization.findOne({
-    where: { code: req.user.codeOrganization },
+  const urbanization = await Urbanization.findOne({
+    where: { code: req.user.codeUrbanization },
   });
 
-  if (!organization)
+  if (!urbanization)
     return res
       .status(400)
-      .json(validationResponse(["La organización no existe"]));
+      .json(validationResponse(["La urbanización no existe"]));
 
   try {
-    const savedGroup = await Group.create({
+    const savedFamily = await Family.create({
       code: req.body.code,
       name: req.body.name,
       address: req.body.address,
-      alicuota : req.body.alicuota,
-      codeOrganization: req.user.codeOrganization,
+      aliquot : req.body.aliquot,
+      codeUrbanization: req.user.codeUrbanization,
     });
 
     return res.status(201).json(
-      successResponse("group created!", {
-        group: savedGroup,
+      successResponse("family created!", {
+        family: savedFamily,
       })
     );
   } catch (err) {
@@ -62,16 +62,16 @@ const destroy = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const num = await Group.destroy({ where: { id: id } });
+    const num = await Family.destroy({ where: { id: id } });
 
     if (num != 1)
       return res
         .status(400)
-        .json(validationResponse([`No puede eliminar el grupo con id=${id}`]));
+        .json(validationResponse([`No puede eliminar la familia con id=${id}`]));
 
     return res
       .status(200)
-      .json(successResponse("El grupo fué eliminado exitosamente.", {}));
+      .json(successResponse("La familia fué eliminada exitosamente.", {}));
   } catch (err) {
     return res
       .status(500)
@@ -93,11 +93,11 @@ const getAll = async (req, res) => {
 
     const { limit, offset } = getPagination(page, size);
 
-    const { count, rows } = await Group.findAndCountAll({
+    const { count, rows } = await Family.findAndCountAll({
       where: {
         ...condition,
-        ...(req?.user?.codeOrganization && {
-          codeOrganization: req.user.codeOrganization,
+        ...(req?.user?.codeUrbanization && {
+          codeUrbanization: req.user.codeUrbanization,
         }),
       },
       offset: offset,
@@ -109,7 +109,7 @@ const getAll = async (req, res) => {
     return res.status(200).json(
       successResponse("Success!", {
         pagination,
-        groups: rows,
+        families: rows,
       })
     );
   } catch (err) {
@@ -124,8 +124,21 @@ const get = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const group = await Group.findOne({ where: { id: id } });
-    return res.status(200).json(successResponse("Success", { group }));
+    const family = await Family.findOne({ where: { id: id } });
+    return res.status(200).json(successResponse("Success", { family }));
+  } catch (err) {
+    return res
+      .status(500)
+      .json(errorResponse("Ocurrió un error en el servidor.", res.statusCode));
+  }
+};
+
+const getByCode = async (req, res) => {
+  const code = req.params.code;
+
+  try {
+    const family = await Family.findOne({ where: { code: code } });
+    return res.status(200).json(successResponse("Success", { family }));
   } catch (err) {
     return res
       .status(500)
@@ -134,7 +147,7 @@ const get = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { error } = groupValidation(req.body, true);
+  const { error } = familyValidation(req.body, true);
 
   if (error)
     return res
@@ -144,23 +157,23 @@ const update = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const [num, groupUpdated] = await Group.update(req.body, {
+    const [num, familyUpdated] = await Family.update(req.body, {
       where: { id: id },
       returning: true,
     });
 
-    // Validate if organization exist
+    // Validate if urbanization exist
 
     if (num != 1)
       return res
         .status(400)
         .json(
-          validationResponse([`No puede actualizar el grupo con id=${id}`])
+          validationResponse([`No puede actualizar la familia con id=${id}`])
         );
 
     return res.status(200).json(
-      successResponse("El grupo fué actualizado exitosamente.", {
-        group: groupUpdated,
+      successResponse("La familia fué actualizada exitosamente.", {
+        family: familyUpdated,
       })
     );
   } catch (err) {
@@ -174,6 +187,7 @@ module.exports = {
   create,
   getAll,
   get,
+  getByCode,
   destroy,
   update,
 };

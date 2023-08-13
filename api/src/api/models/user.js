@@ -78,12 +78,12 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = (model) => {
-    User.belongsTo(model.Organization, {
-      foreignKey: "codeOrganization",
+    User.belongsTo(model.Urbanization, {
+      foreignKey: "codeUrbanization",
     });
 
-    User.belongsToMany(model.Group, {
-      through: model.UserGroup,
+    User.belongsToMany(model.Family, {
+      through: model.UserFamily,
       foreignKey: {
         name: "username",
       },

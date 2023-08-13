@@ -1,5 +1,5 @@
-String apiUrl = 'http://10.0.2.2:8080/';
-String apiKeyMaps = "AIzaSyAL3gSeXMiMFdGgRV14HH3vq74ukMXpRTU";
+String apiUrl = 'http://192.168.100.25:8080/';
+String apiKeyMaps = "AIzaSyDu-8XIHqh0BRHXIB-wZfTAsz0k4l-0tMA";
 
 var dateActual = DateTime.now();
 var startDate =

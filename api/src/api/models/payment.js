@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const Pago = sequelize.define(
-      "Pago",
+    const Payment = sequelize.define(
+      "Payment",
       {
         id: {
           type: DataTypes.BIGINT,
@@ -8,17 +8,17 @@ module.exports = (sequelize, DataTypes) => {
           primaryKey: true,
         },
 
-        valor: {
+        payvalue: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
   
-        fechaEmision: {
+        issueDate: {
             type: DataTypes.DATE,
             allowNull: false,
         }, 
   
-        estado: {
+        stateuser: {
           type: DataTypes.STRING(10),
           allowNull: false,
         }, 
@@ -28,14 +28,14 @@ module.exports = (sequelize, DataTypes) => {
       { timestamps: false }
     );
   
-    Pago.associate = (model) => {
-        Pago.belongsTo(model.Group, {
+    Payment.associate = (model) => {
+        Payment.belongsTo(model.Family, {
             foreignKey: {
-              name: "groupCode",
+              name: "familyCode",
             },
           });
     };
   
-    return Pago;
+    return Payment;
   };
   

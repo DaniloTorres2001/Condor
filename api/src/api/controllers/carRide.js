@@ -33,7 +33,7 @@ const get = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const rows = await CarRide.findAll({
-      where: { organization: req.params.organization, 
+      where: { urbanization: req.params.urbanization, 
         [Op.or]: [
           { passenger: req.params.user },
           { driver: req.params.user }
@@ -55,7 +55,7 @@ const getAllAvailiable = async (req, res) => {
     let date = moment().subtract(MAX_MINUTES_BEFORE, 'minutes').toISOString() 
     const rows = await CarRide.findAll({
       where: { 
-        organization: req.params.organization, 
+        urbanization: req.params.urbanization, 
         [Op.and]: [
           {
             status: req.params.status,
@@ -146,13 +146,13 @@ const giveGrade = async (req, res) => {
       carRide.finalComments.ratingPassenger = bodyValue.rating ?? ''
       carRide.finalComments.commentPassenger = bodyValue.comment ?? ''             
       user = await User.findOne({ where: { username: carRide.driver, 
-        codeOrganization: carRide.organization}  })
+        codeUrbanization: carRide.urbanization}  })
       user.pointsDriver = parseInt(user.pointsDriver) + parseInt(bodyValue.rating)      
     } else {
       carRide.finalComments.ratingDriver = bodyValue.rating ?? ''
       carRide.finalComments.commentDriver = bodyValue.comment ?? '' 
       user = await User.findOne({ where: { username: carRide.passenger, 
-        codeOrganization: carRide.organization}  })
+        codeUrbanization: carRide.urbanization}  })
       user.pointsPassenger = parseInt(user.pointsPassenger) + parseInt(bodyValue.rating)
     } 
     user.careers = parseInt(user.careers) + 1

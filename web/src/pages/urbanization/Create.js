@@ -2,7 +2,7 @@ import { Container, Button } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
-import GroupForm from "./GroupForm";
+import UrbanizationForm from "./UrbanizationForm";
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 import { useState } from "react";
 
@@ -20,7 +20,12 @@ export default function Create() {
   };
 
   const handleSubmit = async (data) => {
-    const response = await sendRequest(`${urlApi}/groups`, data, "POST", true);
+    const response = await sendRequest(
+      `${urlApi}/urbanizations`,
+      data,
+      "POST",
+      true
+    );
 
     if (!response.error) {
       //Response API
@@ -29,7 +34,6 @@ export default function Create() {
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
-
         onOpenSnackbar(true, errorMessage, "error");
       }
     } else {
@@ -44,14 +48,11 @@ export default function Create() {
           stateSnackbar={snackBar}
           onCloseSnackbar={() => onCloseSnackbar}
         />
-
         <Button variant="contained" component={RouterLink} to="../">
           Regresar
         </Button>
 
-        <GroupForm
-          onSubmitForm={handleSubmit}
-        />
+        <UrbanizationForm onSubmitForm={handleSubmit} />
       </Container>
     </>
   );

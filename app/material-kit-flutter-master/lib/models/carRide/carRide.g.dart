@@ -16,10 +16,10 @@ CarRide _$CarRideFromJson(Map<String, dynamic> json) {
     status: json['status'] as String,
     observations: json['observations'] as Map<String, dynamic>?,
     observationsDriver: json['observationsDriver'] as Map<String, dynamic>?,
-    tip: json['tip'] as String,
+    pay: json['pay'] as String,
     driver: json['driver'] as String?,
     finalComments: json['finalComments'] as Map<String, dynamic>?,
-    organization: json['organization'] as String,
+    urbanization: json['urbanization'] as String,
     user: json['User'] == null
         ? null
         : User.fromJson(json['User'] as Map<String, dynamic>),
@@ -44,9 +44,9 @@ Map<String, dynamic> _$CarRideToJson(CarRide instance) {
   val['status'] = instance.status;
   writeNotNull('observations', instance.observations);
   writeNotNull('observationsDriver', instance.observationsDriver);
-  val['tip'] = instance.tip;
+  val['pay'] = instance.pay;
   writeNotNull('finalComments', instance.finalComments);
-  val['organization'] = instance.organization;
+  val['urbanization'] = instance.urbanization;
   writeNotNull('User', instance.user);
   return val;
 }

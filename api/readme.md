@@ -12,6 +12,8 @@
     ----WINDOWS---
 
     docker run --name postgres_condor2  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=default_condor_password -e POSTGRES_DB=postgres_condor_db2 -p 5432:5432 -d postgres
+
+    docker run --name postgres_condor3  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=default_condor_password -e POSTGRES_DB=postgres_condor_db3 -p 5432:5432 -d postgres
 ```
 
 - Connect to database instance
