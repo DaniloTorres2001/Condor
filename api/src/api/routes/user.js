@@ -16,7 +16,7 @@ router
     ]),
     user.getProfile
   ).get(
-    "/:organization/:username",
+    "/:urbanization/:username",
     verifyJWT,
     canAccess([
       constants.ROLES.superAdministrator,

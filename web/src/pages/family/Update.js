@@ -3,13 +3,13 @@ import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { Container, Button } from "@mui/material";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
-import GroupForm from "./GroupForm";
+import FamilyForm from "./FamilyForm";
 
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
 export default function Update() {
   const navigate = useNavigate();
-  const [group, setGroup] = useState({});
+  const [family, setFamily] = useState({});
   const { id } = useParams();
 
   const [snackBar, setSnackBar] = useState({});
@@ -23,14 +23,14 @@ export default function Update() {
   };
 
   useEffect(() => {
-    getGroup(id);
+    getFamily(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const getGroup = async (idGroup) => {
+  const getFamily = async (idFamily) => {
 
     const response = await sendRequest(
-      `${urlApi}/groups/${idGroup}`,
+      `${urlApi}/families/${idFamily}`,
       null,
       "GET",
       true
@@ -40,7 +40,7 @@ export default function Update() {
       //Response API
       if (!response.data?.error) {
         //Importtant
-        setGroup(response.data?.results?.group);
+        setFamily(response.data?.results?.family);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -54,7 +54,7 @@ export default function Update() {
 
   const obSubmitForm = async (data) => {
     const response = await sendRequest(
-      `${urlApi}/groups/${group?.id}`,
+      `${urlApi}/families/${family?.id}`,
       data,
       "PUT",
       true
@@ -86,9 +86,9 @@ export default function Update() {
           Regresar
         </Button>
 
-        <GroupForm
+        <FamilyForm
           onSubmitForm={obSubmitForm}
-          groupUpdate={group}
+          familyUpdate={family}
           updating={true}
         />
       </Container>

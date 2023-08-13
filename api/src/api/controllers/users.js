@@ -2,8 +2,8 @@ const {
   User,
   Role,
   UserRole,
-  Group,
-  Organization,
+  Family,
+  Urbanization,
   ImageUser,
   sequelize,
 } = require("../models");
@@ -42,7 +42,7 @@ const create = async (req, res) => {
         .status(422)
         .json(validationResponse(error.details.map((e) => e.message)));
 
-    const { email, username, codeRole, codeGroup, codeOrganization } = req.body;
+    const { email, username, codeRole, codeFamily, codeUrbanization } = req.body;
 
     const user = await User.findOne({
       where: { [Op.or]: [{ email }, { username }] },
@@ -64,31 +64,31 @@ const create = async (req, res) => {
         .status(400)
         .json(validationResponse(["Los roles son incorrectos."]));
 
-    const group =
-      codeGroup &&
-      (await Group.findAll({
+    const family =
+      codeFamily &&
+      (await Family.findAll({
         where: {
-          code: codeGroup,
+          code: codeFamily,
         },
       }));
 
-    if (codeGroup && group.length < codeGroup.length)
+    if (codeFamily && family.length < codeFamily.length)
       return res
         .status(400)
         .json(validationResponse(["Los grupos son incorrectos."]));
 
-    const organization =
-      codeOrganization &&
-      (await Organization.findOne({
+    const urbanization =
+      codeUrbanization &&
+      (await Urbanization.findOne({
         where: {
-          code: codeOrganization,
+          code: codeUrbanization,
         },
       }));
 
-    if (codeOrganization && !organization)
+    if (codeUrbanization && !urbanization)
       return res
         .status(400)
-        .json(validationResponse(["La organización no existe."]));
+        .json(validationResponse(["La urbanización no existe."]));
 
     // Upload images
     const profileImgLink = await uploadMultipleImages(
@@ -117,10 +117,10 @@ const create = async (req, res) => {
         { transaction: t }
       );
 
-      if (codeGroup) await savedUser.addGroups(group, { transaction: t });
+      if (codeFamily) await savedUser.addFamilies(family, { transaction: t });
 
-      if (codeOrganization)
-        await savedUser.setOrganization(organization, { transaction: t });
+      if (codeUrbanization)
+        await savedUser.setUrbanization(urbanization, { transaction: t });
 
       return res.status(201).json(
         successResponse("User created!", {
@@ -173,15 +173,15 @@ const update = async (req, res) => {
           .json(validationResponse(["Los roles son incorrectos."]));
     }
 
-    if (req.body?.codeGroup) {
-      const groupsUpdated = await user
-        .setGroups(req.body?.codeGroup, { transaction: t })
+    if (req.body?.codeFamily) {
+      const familiesUpdated = await user
+        .setFamilies(req.body?.codeFamily, { transaction: t })
         .catch(async (e) => {
           await t.rollback();
           return null;
         });
 
-      if (!groupsUpdated)
+      if (!familiesUpdated)
         return res
           .status(400)
           .json(validationResponse(["Los grupos son incorrectos."]));
@@ -310,8 +310,8 @@ const getAll = async (req, res) => {
       where: {
         ...condition,
 
-        ...(req.user?.codeOrganization && {
-          codeOrganization: req.user.codeOrganization,
+        ...(req.user?.codeUrbanization && {
+          codeUrbanization: req.user.codeUrbanization,
         }),
 
         id: {
@@ -327,7 +327,7 @@ const getAll = async (req, res) => {
             code: getuserbyRoles,
           },
         },
-        { model: Group, attributes: ["id", "code", "name"] },
+        { model: Family, attributes: ["id", "code", "name"] },
       ],
     });
 
@@ -355,7 +355,7 @@ const get = async (req, res) => {
 
     if (
       req.user.roles.includes(ROLES.administrator.code) &&
-      user?.codeOrganization !== req.user.codeOrganization
+      user?.codeUrbanization !== req.user.codeUrbanization
     )
       return res
         .status(400)
@@ -370,7 +370,7 @@ const get = async (req, res) => {
 
     // Roles
     const UserRoles = (await user.getRoles({ raw: true })).map((r) => r.code);
-    const UserGroups = (await user.getGroups({ raw: true })).map((r) => r.code);
+    const UserFamilies = (await user.getFamilies({ raw: true })).map((r) => r.code);
     // Response
     return res.status(200).json(
       successResponse("Success", {
@@ -378,7 +378,7 @@ const get = async (req, res) => {
           ...user.dataValues,
           images: images,
           roles: UserRoles,
-          groups: UserGroups,
+          families: UserFamilies,
         },
       })
     );
@@ -483,10 +483,10 @@ const getUserData = async (req, res) => {
       where: { username: req.params.username },
       include: [
         {
-          model: Organization,          
+          model: Urbanization,          
           attributes: ["id", "code"],
           where: {
-            code: req.params.organization,
+            code: req.params.urbanization,
           },
         }
       ]

@@ -15,7 +15,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     token: json['token'] as String?,
     email: json['email'] as String,
     details: json['details'] as Map<String, dynamic>?,
-    codeOrganization: json['codeOrganization'] as String,
+    codeUrbanization: json['codeUrbanization'] as String,
     pointsPassenger: json['pointsPassenger'] as String?,
     careers: json['careers'] as String?,
     pointsDriver: json['pointsDriver'] as String?,
@@ -38,7 +38,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('token', instance.token);
   val['email'] = instance.email;
   writeNotNull('details', instance.details);
-  val['codeOrganization'] = instance.codeOrganization;
+  val['codeUrbanization'] = instance.codeUrbanization;
   writeNotNull('pointsPassenger', instance.pointsPassenger);
   writeNotNull('pointsDriver', instance.pointsDriver);
   writeNotNull('careers', instance.careers);

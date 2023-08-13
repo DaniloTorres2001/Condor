@@ -1,7 +1,7 @@
 
 import { TextField, Box, Grid, Typography, Button,FormControlLabel,
   FormLabel,
-  FormGroup,Switch,
+  FormFamily,Switch,
   } from "@mui/material";
 import { useState } from "react";
 import { grey } from "@mui/material/colors";
@@ -9,48 +9,48 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { validationErrors } from "../../utils/constants";
 
-const GroupFormScheme = Yup.object().shape({
+const FamilyFormScheme = Yup.object().shape({
   code: Yup.string()
-    .max(25, validationErrors.group.code.max)
-    .required(validationErrors.group.code.required),
+    .max(25, validationErrors.family.code.max)
+    .required(validationErrors.family.code.required),
   name: Yup.string()
-    .max(75, validationErrors.group.name.max)
-    .required(validationErrors.group.name.required),
+    .max(75, validationErrors.family.name.max)
+    .required(validationErrors.family.name.required),
   address: Yup.string()
-    .max(100, validationErrors.group.address.max)
-    .required(validationErrors.group.address.required),
-    alicuota: Yup.number()
+    .max(100, validationErrors.family.address.max)
+    .required(validationErrors.family.address.required),
+    aliquot: Yup.number()
     .when("includeAlicuota", {
       is: true,
-      then: Yup.number().required(validationErrors.group.alicuota.required),
+      then: Yup.number().required(validationErrors.family.aliquot.required),
       otherwise: Yup.number(),
     }),
 
 });
 
-export default function GroupForm({ onSubmitForm, updating, groupUpdate }) {
+export default function FamilyForm({ onSubmitForm, updating, familyUpdate }) {
 
   
   const formik = useFormik({
     initialValues: {
-      code: groupUpdate?.code ?? "",
-      name: groupUpdate?.name ?? "",
-      address: groupUpdate?.address ?? "",
-      alicuota: groupUpdate?.alicuota ?? "",
+      code: familyUpdate?.code ?? "",
+      name: familyUpdate?.name ?? "",
+      address: familyUpdate?.address ?? "",
+      aliquot: familyUpdate?.aliquot ?? "",
       includeAlicuota: false,
     },
     enableReinitialize: true,
-    validationSchema: GroupFormScheme,
+    validationSchema: FamilyFormScheme,
 
     onSubmit: (values) => {
-      const dataGroup = {
+      const dataFamily = {
         ...(!updating && { code: values.code }),
         name: values.name,
         address: values.address,
-        alicuota: values.includeAlicuota ? values.alicuota : null,
+        aliquot: values.includeAlicuota ? values.aliquot : null,
       };
 
-      onSubmitForm(dataGroup);
+      onSubmitForm(dataFamily);
     },
   });
 
@@ -135,18 +135,18 @@ export default function GroupForm({ onSubmitForm, updating, groupUpdate }) {
             {formik.values.includeAlicuota && (
               <Grid item xs={12} sm={6}>
                 <TextField
-                  id="alicuota"
-                  name="alicuota"
+                  id="aliquot"
+                  name="aliquot"
                   label="Alicuota"
                   fullWidth
                   autoComplete="off"
                   size="small"
-                  value={formik.values.alicuota}
+                  value={formik.values.aliquot}
                   onChange={formik.handleChange}
                   error={
-                    formik.touched.alicuota && Boolean(formik.errors.alicuota)
+                    formik.touched.aliquot && Boolean(formik.errors.aliquot)
                   }
-                  helperText={formik.touched.alicuota && formik.errors.alicuota}
+                  helperText={formik.touched.aliquot && formik.errors.aliquot}
                 />
               </Grid>
             )}

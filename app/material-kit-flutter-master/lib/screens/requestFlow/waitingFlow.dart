@@ -45,7 +45,7 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed) {
       validateMaxOpportunities();
     }
   }
@@ -61,12 +61,11 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
           if (activeFlow && valueTmp.driver != "" && valueTmp.driver != null) {
             activeFlow = false;
             driverTmp = await User.getProfileUser("${valueTmp.driver}");
-            if(driverTmp.isNotEmpty)
-              acceptionDialog(valueTmp);
+            if (driverTmp.isNotEmpty) acceptionDialog(valueTmp);
           }
           opportunities++;
         }
-      } on Exception catch(e) {
+      } on Exception catch (e) {
         timer.cancel();
         Get.off(() => Home());
       }
@@ -89,117 +88,118 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
     print("[BUILD] _WaitingFlow");
     return SafeArea(
         child: WillPopScope(
-          onWillPop: backFunctionDefault,
-          child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: MaterialColors.blueMain,
-                automaticallyImplyLeading: false,
-                leading: null,
-                actions: [
-                  TextButton(
-                    onPressed: () => cancelRequest(),
-                    child: Icon(
-                      Icons.cancel,
-                      color: Colors.white,
+      onWillPop: backFunctionDefault,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: MaterialColors.blueMain,
+            automaticallyImplyLeading: false,
+            leading: null,
+            actions: [
+              TextButton(
+                onPressed: () => cancelRequest(),
+                child: Icon(
+                  Icons.cancel,
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+          backgroundColor: MaterialColors.bgColorScreen,
+          body: FutureBuilder(
+            future: getAllSecureStorage(),
+            builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                Map<String, dynamic>? data = snapshot.data ?? {};
+                return Column(
+                  children: [
+                    Divider(
+                      color: Colors.transparent,
+                      height: 16,
                     ),
-                  )
-                ],
-              ),
-              backgroundColor: MaterialColors.bgColorScreen,
-              body: FutureBuilder(
-                future: getAllSecureStorage(),
-                builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                  if(snapshot.hasData) {
-                    Map<String, dynamic>? data = snapshot.data ?? {};
-                    return Column(
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Solicitando vehiculo",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    )),
+                    Divider(
+                      color: Colors.transparent,
+                      height: 24,
+                    ),
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                          leading: Icon(Icons.location_pin),
+                          title: Text(
+                              widget.providerRequest.addresses['origin'] ??
+                                  '')),
+                    )),
+                    Divider(
+                      color: Colors.transparent,
+                      height: 24,
+                    ),
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                          leading: Icon(Icons.location_searching),
+                          title: Text(data['nameUrbanization'] ?? '')),
+                    )),
+                    Divider(
+                      color: Colors.transparent,
+                      height: 24,
+                    ),
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                          leading: Icon(Icons.attach_money),
+                          title: Text("${widget.request.pay}")),
+                    )),
+                    Divider(
+                      color: Colors.transparent,
+                      height: 16,
+                    ),
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListTile(
+                          leading: Icon(Icons.comment),
+                          title: Text(
+                              "${widget.request.observations!['message']}")),
+                    )),
+                    Divider(
+                      color: Colors.transparent,
+                      height: 48,
+                    ),
+                    Center(
+                        child: Column(
                       children: [
-                        Divider(
-                          color: Colors.transparent,
-                          height: 16,
+                        textCustom("Buscando conductor ...", size: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SpinKitCircle(
+                            color: Colors.blue,
+                            size: 50.0,
+                          ),
                         ),
-                        Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Solicitando vehiculo",
-                                style: TextStyle(fontSize: 24),
-                              ),
-                            )),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 24,
-                        ),
-                        Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                  leading: Icon(Icons.location_pin),
-                                  title: Text(
-                                      widget.providerRequest.addresses['origin'] ?? '')),
-                            )),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 24,
-                        ),
-                        Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                  leading: Icon(Icons.location_searching),
-                                  title: Text(data['nameOrganization'] ?? '')),
-                            )),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 24,
-                        ),
-                        Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                  leading: Icon(Icons.attach_money),
-                                  title: Text("${widget.request.tip}")),
-                            )),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 16,
-                        ),
-                        Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                  leading: Icon(Icons.comment),
-                                  title:
-                                  Text("${widget.request.observations!['message']}")),
-                            )),
-                        Divider(
-                          color: Colors.transparent,
-                          height: 48,
-                        ),
-                        Center(
-                            child: Column(
-                              children: [
-                                textCustom("Buscando conductor ...", size: 16 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SpinKitCircle(
-                                    color: Colors.blue,
-                                    size: 50.0,
-                                  ),
-                                ),
-                              ],
-                            ))
                       ],
-                    );
-                  }
-                  return Container();
-                },
-              )),
-        ));
+                    ))
+                  ],
+                );
+              }
+              return Container();
+            },
+          )),
+    ));
   }
 
   void acceptionDialog(CarRide carRide) {
-    var rating = int.parse(driverTmp['user']['pointsPassenger'] ?? '0')
-        / int.parse(driverTmp['user']['careers'] ?? '0');
+    var rating = int.parse(driverTmp['user']['pointsPassenger'] ?? '0') /
+        int.parse(driverTmp['user']['careers'] ?? '0');
     showDialog(
         context: context,
         builder: (_) {
@@ -207,7 +207,8 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
           var imageView = ImageView(listImages);
           List<Widget> childrenModal = [
             textCustom("Nombre: ", size: 16, isBold: true),
-            Text("${driverTmp['user']['fullName']} (${rating.toStringAsFixed(1)})"),
+            Text(
+                "${driverTmp['user']['fullName']} (${rating.toStringAsFixed(1)})"),
             imageView.getPhoto('profile', withTitle: false),
             textCustom("Telefono: ", size: 16, isBold: true),
             Text("${driverTmp['user']['details']['phone']}"),
@@ -233,8 +234,9 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
                 child: Text('Aceptar', style: buttonYellowStyle),
                 style: bottonBorderBlue,
                 onPressed: () async {
-                  var boolValue = await acceptingDriver("${carRide.id}", driverTmp['user']['username'], {"comments": ""}, "3");
-                  if(boolValue)
+                  var boolValue = await acceptingDriver("${carRide.id}",
+                      driverTmp['user']['username'], {"comments": ""}, "3");
+                  if (boolValue)
                     Get.off(() => AcceptingFlow(driverTmp, carRide));
                 },
               ),
@@ -242,10 +244,11 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
                 child: Text('Rechazar', style: buttonYellowStyle),
                 style: bottonBorderBlue,
                 onPressed: () async {
-                  var boolValue = await configDriver("${carRide.id}", "", {"comments": ""}, "1");
+                  var boolValue = await configDriver(
+                      "${carRide.id}", "", {"comments": ""}, "1");
                   activeFlow = true;
                   validateMaxOpportunities();
-                  if(boolValue) Navigator.of(context).pop();
+                  if (boolValue) Navigator.of(context).pop();
                 },
               ),
             ],
@@ -264,9 +267,10 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
     }
   }
 
-  Future<bool> configDriver(
-      String id, String driver, Map<String, dynamic> observationsDriver, String status) async {
-    var request = await CarRide.configDriver(id, driver, observationsDriver, status);
+  Future<bool> configDriver(String id, String driver,
+      Map<String, dynamic> observationsDriver, String status) async {
+    var request =
+        await CarRide.configDriver(id, driver, observationsDriver, status);
     if (request) {
       activeFlow = true;
       driverTmp = {};
@@ -277,9 +281,10 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
     return false;
   }
 
-  Future<bool> acceptingDriver(
-      String id, String driver, Map<String, dynamic> observationsDriver, String status) async {
-    var request = await CarRide.configDriver(id, driver, observationsDriver, status);
+  Future<bool> acceptingDriver(String id, String driver,
+      Map<String, dynamic> observationsDriver, String status) async {
+    var request =
+        await CarRide.configDriver(id, driver, observationsDriver, status);
     if (request) {
       cleanScreen();
       return true;
@@ -296,5 +301,4 @@ class _WaitingFlow extends State<WaitingFlow> with WidgetsBindingObserver {
       Get.offAndToNamed("/home");
     }
   }
-
 }

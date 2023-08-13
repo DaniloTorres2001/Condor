@@ -219,14 +219,14 @@ export default function User() {
                     <TableCell>{row.idCard}</TableCell>
                     <TableCell>{row.email}</TableCell>
                     <TableCell>
-                      {row?.codeOrganization ?? "super-admin"}
+                      {row?.codeUrbanization ?? "super-admin"}
                     </TableCell>
                     {auth?.user?.roles[0] === "002" && (
                       <TableCell>
-                        {row?.Groups?.map(
+                        {row?.Families?.map(
                           (g, i) =>
                             `${g.name}${
-                              i < row?.Groups?.length - 1 ? ", " : ""
+                              i < row?.Families?.length - 1 ? ", " : ""
                             }`
                         )}
                       </TableCell>

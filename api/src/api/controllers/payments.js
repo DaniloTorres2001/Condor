@@ -1,4 +1,4 @@
-const { Pago} = require("../models");
+const { Payment} = require("../models");
 const { Op } = require("sequelize");
 const { getPagination, getPagingData } = require("../utils/pagination");
 
@@ -14,8 +14,8 @@ const getAll = async (req, res) => {
     const condition = search
       ? {
           [Op.or]: [
-            { estado: { [Op.startsWith]: search } },
-            { groupCode: { [Op.startsWith]: search } },
+            { stateuser: { [Op.startsWith]: search } },
+            { familyCode: { [Op.startsWith]: search } },
             
           ],
         }
@@ -23,7 +23,7 @@ const getAll = async (req, res) => {
 
     const { limit, offset } = getPagination(page, size);
 
-    const { count, rows } = await Pago.findAndCountAll({
+    const { count, rows } = await Payment.findAndCountAll({
       where: {
         ...condition,
       },
@@ -36,7 +36,7 @@ const getAll = async (req, res) => {
     return res.status(200).json(
       successResponse("Success!", {
         pagination,
-        pagos: rows,
+        payments: rows,
       })
     );
   } catch (err) {
@@ -53,12 +53,12 @@ const getAllDates = async (req, res) => {
     const condition = search
       ? {
         [Op.and]: [
-          { fechaEmision: { [Op.gte]: new Date(search + '-01') } }, // busca a partir del primer día del mes
-          { fechaEmision: { [Op.lt]: new Date(moment(search + '-01').add(1, 'months')) } } // busca hasta el último día del mes
+          { issueDate: { [Op.gte]: new Date(search + '-01') } }, // busca a partir del primer día del mes
+          { issueDate: { [Op.lt]: new Date(moment(search + '-01').add(1, 'months')) } } // busca hasta el último día del mes
         ],
           [Op.or]: [
-            { estado: { [Op.startsWith]: search } },
-            { groupCode: { [Op.startsWith]: search } },
+            { stateuser: { [Op.startsWith]: search } },
+            { familyCode: { [Op.startsWith]: search } },
             
           ],
         }
@@ -66,7 +66,7 @@ const getAllDates = async (req, res) => {
 
     const { limit, offset } = getPagination(page, size);
 
-    const { count, rows } = await Pago.findAndCountAll({
+    const { count, rows } = await Payment.findAndCountAll({
       where: {
         ...condition,
       },
@@ -79,7 +79,7 @@ const getAllDates = async (req, res) => {
     return res.status(200).json(
       successResponse("Success!", {
         pagination,
-        pagos: rows,
+        payments: rows,
       })
     );
   } catch (err) {
@@ -94,8 +94,8 @@ const get = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const pago = await Pago.findOne({ where: { id: id } });
-    return res.status(200).json(successResponse("Success", { pago }));
+    const payment = await Payment.findOne({ where: { id: id } });
+    return res.status(200).json(successResponse("Success", { payment }));
   } catch (err) {
     return res
       .status(500)

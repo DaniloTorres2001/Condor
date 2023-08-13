@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Organization = sequelize.define(
-    "Organization",
+  const Urbanization = sequelize.define(
+    "Urbanization",
     {
       id: {
         allowNull: false,
@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
     { timestamps: false }
   );
 
-  Organization.associate = (model) => {
-    Organization.hasMany(model.Group, {
-      foreignKey: "codeOrganization",
+  Urbanization.associate = (model) => {
+    Urbanization.hasMany(model.Family, {
+      foreignKey: "codeUrbanization",
     });
   };
 
-  return Organization;
+  return Urbanization;
 };

@@ -13,7 +13,6 @@ import 'dart:async';
 import 'package:material_kit_flutter/models/user/user.dart';
 import 'package:material_kit_flutter/screens/requestFlow/WaitingFlowDriver.dart';
 
-
 import 'mapWidget.dart';
 
 class FormRequest extends StatefulWidget {
@@ -54,7 +53,8 @@ class _FormRequest extends State<FormRequest> {
         child: FutureBuilder(
           future: getAllSecureStorage(),
           builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-            if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData) {
               Map<String, dynamic>? data = snapshot.data ?? {};
               return Column(
                 children: [
@@ -66,7 +66,8 @@ class _FormRequest extends State<FormRequest> {
                           readOnly: true,
                           name: 'origin',
                           decoration: InputDecoration(
-                              labelText: 'Origen', icon: Icon(Icons.location_on)),
+                              labelText: 'Origen',
+                              icon: Icon(Icons.location_on)),
                           onChanged: (value) {},
                           onTap: () {
                             context.read<RequestProvider>().typeSelection = 0;
@@ -79,17 +80,18 @@ class _FormRequest extends State<FormRequest> {
                           readOnly: true,
                           name: 'destination_',
                           decoration: InputDecoration(
-                              labelText: 'Destino', icon: Icon(Icons.location_on)),
+                              labelText: 'Destino',
+                              icon: Icon(Icons.location_on)),
                           onChanged: (value) {},
                           onTap: () {
                             //context.read<RequestProvider>().typeSelection = 1;
                             //showModalInfo();
                           },
                           keyboardType: TextInputType.text,
-                          initialValue: data['nameOrganization'] ?? '',
+                          initialValue: data['nameUrbanization'] ?? '',
                         ),
                         FormBuilderTextField(
-                          name: 'tip',
+                          name: 'pay',
                           decoration: InputDecoration(
                               labelText: 'Monto a Pagar',
                               icon: Icon(Icons.money)),
@@ -100,7 +102,8 @@ class _FormRequest extends State<FormRequest> {
                         FormBuilderTextField(
                           name: 'comments',
                           decoration: InputDecoration(
-                              labelText: 'Comentarios', icon: Icon(Icons.comment)),
+                              labelText: 'Comentarios',
+                              icon: Icon(Icons.comment)),
                           keyboardType: TextInputType.text,
                           initialValue: "",
                           maxLength: 200,
@@ -114,22 +117,21 @@ class _FormRequest extends State<FormRequest> {
                       Expanded(
                         child: MaterialButton(
                           color: MaterialColors.blueMain,
-                          child: Text(
-                              "Solicitar", style: buttonYellowStyle
-                          ),
+                          child: Text("Solicitar", style: buttonYellowStyle),
                           onPressed: () async {
                             var currentState = _formKey.currentState;
                             currentState!.save();
                             var provider = context.read<RequestProvider>();
                             if (validateData(currentState.value, provider) &&
                                 currentState.validate()) {
-                              if(!isSend) {
+                              if (!isSend) {
                                 var bodyRequest = await buildRequest(
                                     currentState.value, provider, data);
                                 if (bodyRequest.id != "0") {
                                   isSend = true;
                                   Get.off(() => WaitingFlow(
-                                      request: bodyRequest, providerRequest: provider));
+                                      request: bodyRequest,
+                                      providerRequest: provider));
                                 } else {
                                   showCenterShortToast(
                                       "Error al solicitar, intente en un momento");
@@ -166,10 +168,7 @@ class _FormRequest extends State<FormRequest> {
                   textCustom('Estas dispuesto a llevar a .',
                       isBold: false, size: 16),
                   Divider(),
-                  textCustom(
-                      'El usuario comenta: ',
-                      isBold: false,
-                      size: 16),
+                  textCustom('El usuario comenta: ', isBold: false, size: 16),
                   Divider(),
                   textCustom('Comentarios', isBold: true, size: 16),
                 ],
@@ -188,10 +187,8 @@ class _FormRequest extends State<FormRequest> {
         });
   }
 
-
-
-  Future<CarRide> buildRequest(
-      Map<String, dynamic> value, RequestProvider provider, Map<String, dynamic> data) async {
+  Future<CarRide> buildRequest(Map<String, dynamic> value,
+      RequestProvider provider, Map<String, dynamic> data) async {
     String username = await getSecureStorage("user");
     var dateTime = DateTime.now();
     /*var distanceBetween = Geolocator.distanceBetween(provider.origin['latitude'], provider.origin['longitude'],
@@ -206,23 +203,22 @@ class _FormRequest extends State<FormRequest> {
         "destLongitude": provider.destination['longitude'],
         "origin": provider.addresses['origin'],
         //"destination": provider.addresses['destination'],
-        "destination": data['nameOrganization'] ?? '',
+        "destination": data['nameUrbanization'] ?? '',
         //"distance": distanceBetween
       },
       "availabilityDate": "${dateTime.toString()}",
       "requestDate": "${dateTime.toString()}",
       "status": "1",
       "observations": {"message": "${value['comments'] ?? ''}"},
-      "tip": (value['tip'] == '') ? '0' : value['tip'],
-      "organization": await getSecureStorage('codeOrganization')
+      "pay": (value['pay'] == '') ? '0' : value['pay'],
+      "urbanization": await getSecureStorage('codeUrbanization')
     };
     return CarRide.registerCarRide(jsonData);
   }
 
   bool validateData(Map<String, dynamic> formData, RequestProvider provider) {
     bool isGood = provider.origin.isNotEmpty;
-    if(!isGood)
-      showCenterShortToast('Complete las direcciones');
+    if (!isGood) showCenterShortToast('Complete las direcciones');
     return isGood;
   }
 
@@ -234,29 +230,27 @@ class _FormRequest extends State<FormRequest> {
   showModalInfo() {
     showDialog(
         context: context,
-        builder: (_) { return new AlertDialog(
-          scrollable: true,
-          title: Text("Selecciona un dirección:"),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                MapWidget()
-              ],
+        builder: (_) {
+          return new AlertDialog(
+            scrollable: true,
+            title: Text("Selecciona un dirección:"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [MapWidget()],
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Regresar', style: TextStyle(color: MaterialColors.yellowMain)),
-              style: bottonBorderBlue,
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-        }
-    );
+            actions: [
+              TextButton(
+                child: Text('Regresar',
+                    style: TextStyle(color: MaterialColors.yellowMain)),
+                style: bottonBorderBlue,
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
-
 }

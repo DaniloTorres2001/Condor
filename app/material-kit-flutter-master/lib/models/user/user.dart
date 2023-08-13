@@ -14,7 +14,7 @@ class User {
   final String? token;
   final String email;
   final Map<String, dynamic>? details;
-  final String codeOrganization;
+  final String codeUrbanization;
   final String? pointsPassenger;
   final String? pointsDriver;
   final String? careers;
@@ -27,7 +27,10 @@ class User {
       this.token,
       required this.email,
       required this.details,
-      required this.codeOrganization, this.pointsPassenger, this.careers, this.pointsDriver});
+      required this.codeUrbanization,
+      this.pointsPassenger,
+      this.careers,
+      this.pointsDriver});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
@@ -36,7 +39,7 @@ class User {
   String toString() {
     return 'User{id: $id, idCard: $idCard, username: $username, '
         'fullName: $fullName, email: $email, '
-        'details: $details, codeOrganization: $codeOrganization, pointsDriver: $pointsDriver, '
+        'details: $details, codeUrbanization: $codeUrbanization, pointsDriver: $pointsDriver, '
         'pointsPassenger: $pointsPassenger, careers: $careers}';
   }
 
@@ -49,12 +52,13 @@ class User {
         fullName: '',
         details: {},
         username: '',
-        codeOrganization: '');
+        codeUrbanization: '');
   }
 
   static Future<User?> login(String name, String password) async {
     Map<String, dynamic> response = await DioClient().postJsonRequest(
-        '/auth/signin', {'username': name, 'password': password, "mode": "app"});
+        '/auth/signin',
+        {'username': name, 'password': password, "mode": "app"});
     if (response.containsKey('results')) {
       var userData = response['results']['user'];
       saveDataSecure(response, userData);
@@ -68,9 +72,12 @@ class User {
     await saveSecureStorage('user', userData['username']);
     await saveSecureStorage('fullName', userData['fullName']);
     await saveSecureStorage('email', userData['email']);
-    await saveSecureStorage('codeOrganization', userData['codeOrganization'] ?? '');
-    await saveSecureStorage('nameOrganization', userData['Organization']['name'] ?? '');
-    await saveSecureStorage('isDriver', userData['details']['driver'].toString());
+    await saveSecureStorage(
+        'codeUrbanization', userData['codeUrbanization'] ?? '');
+    await saveSecureStorage(
+        'nameUrbanization', userData['Urbanization']['name'] ?? '');
+    await saveSecureStorage(
+        'isDriver', userData['details']['driver'].toString());
     await saveSecureStorage('driverValue', 'false');
   }
 
@@ -83,21 +90,22 @@ class User {
 
   static Future<Map<String, dynamic>> getProfile() async {
     var token = await getSecureStorage('token');
-    Map<String, dynamic> response = await DioClient().getJsonRequest(
-        '/users/profile',
-        tokenValue: token);
+    Map<String, dynamic> response =
+        await DioClient().getJsonRequest('/users/profile', tokenValue: token);
     if (!response['error']) {
-      return {"user": User.fromJson(response['results']['user']),
-        "images": response['results']['images']};
+      return {
+        "user": User.fromJson(response['results']['user']),
+        "images": response['results']['images']
+      };
     } else {
       return {};
     }
   }
 
   static Future<Map<String, dynamic>> getProfileUser(String username) async {
-    String organization = await getSecureStorage("codeOrganization");
+    String urbanization = await getSecureStorage("codeUrbanization");
     Map<String, dynamic> response = await DioClient().getJsonRequest(
-        '/users/$organization/$username',
+        '/users/$urbanization/$username',
         tokenValue: await getSecureStorage('token'));
     if (!response['error']) {
       return response['results'];

@@ -11,32 +11,29 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TablePagination,
   Card,
 } from "@mui/material";
+
 
 import SearchBar from "../../components/SearchBarTable";
 import MonthBar from "../../components/MonthBarTable";
 
-import TableMoreMenu from "../../components/_dashboard/TableMoreMenu";
+//import TableMoreMenu from "../../components/_dashboard/TableMoreMenu";
 
 import Page from "../../components/app/Page";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
-
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
-export default function Pagos() {
-  const [groups, setGroups] = useState([]);
-  const [pagos, setPagos] = useState([]);
-
-  
+export default function Payments() {
+  const [family, setFamily] = useState({});
+  const [payments, setPayments] = useState([]);
+  const [snackBar, setSnackBar] = useState({});
 
   // Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [snackBar, setSnackBar] = useState({});
 
   const onOpenSnackbar = (opened, message, type) => {
     setSnackBar({ opened, message, type });
@@ -47,18 +44,16 @@ export default function Pagos() {
   };
 
   useEffect(() => {
-    fetchPagos(page, rowsPerPage);
-    fetchGroups(page, rowsPerPage);
+    getFamily("001");
+    fetchPayments(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, rowsPerPage]);
+  }, []);
 
-
-
-  const fetchPagos = async (pages, row, filterSearch) => {
+  const fetchPayments = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/pagos?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/payments?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -67,7 +62,7 @@ export default function Pagos() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setPagos(response.data?.results);
+        setPayments(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -79,11 +74,10 @@ export default function Pagos() {
     }
   };
 
-  const fetchGroups = async (pages, row, filterSearch) => {
-    const condition = filterSearch ? `&search=${filterSearch}` : "";
+  const getFamily = async (codeFamily) => {
 
     const response = await sendRequest(
-      `${urlApi}/groups?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/families/${codeFamily}`,
       null,
       "GET",
       true
@@ -92,7 +86,8 @@ export default function Pagos() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setGroups(response.data?.results);
+        //Importtant
+        setFamily(response.data?.results?.family);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -114,8 +109,10 @@ export default function Pagos() {
   };
 
   const handleFilterSearch = (filterSearch) => {
-    fetchPagos(page, rowsPerPage, filterSearch);
+    fetchPayments(page, rowsPerPage, filterSearch);
   };
+
+
   
   return (
     <Page title="Detalles de Carreras">
@@ -138,11 +135,12 @@ export default function Pagos() {
         {/* Content */}
 
         <Card>
+          
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <SearchBar onFetchData={handleFilterSearch} />
             <MonthBar />
           </div>
-        
+          
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -155,33 +153,23 @@ export default function Pagos() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pagos?.pagos?.map((row) => (
+                {payments?.payments?.map((row) => (
                   <TableRow hover
                     key={row.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.groupCode}</TableCell>
+                    <TableCell>{family.name}</TableCell>
+                    <TableCell>{family.address}</TableCell>
                     
-                    <TableCell>${row.valor}</TableCell>
-                    <TableCell>{row.estado}</TableCell>
-                    <TableCell>{row.fechaEmision}</TableCell>
+                    <TableCell>${row.payvalue}</TableCell>
+                    <TableCell>{row.stateuser}</TableCell>
+                    <TableCell>{new Date(row.issueDate).toLocaleDateString('es-ES')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
               
             </Table>
           </TableContainer>
-
-          <TablePagination
-            component="div"
-            count={groups?.pagination?.totalItems ?? 0}
-            page={page}
-            labelRowsPerPage={"Items por página"}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </Card>
       </Container>
     </Page>

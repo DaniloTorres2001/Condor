@@ -3,12 +3,12 @@ import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { Container, Button } from "@mui/material";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
-import OrganizationForm from "./OrganizationForm";
+import UrbanizationForm from "./UrbanizationForm";
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
 export default function Create() {
   const navigate = useNavigate();
-  const [organization, setOrganization] = useState({});
+  const [urbanization, setUrbanization] = useState({});
   const { id } = useParams();
   const [snackBar, setSnackBar] = useState({});
 
@@ -21,13 +21,13 @@ export default function Create() {
   };
 
   useEffect(() => {
-    getOrganization(id);
+    getUrbanization(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const getOrganization = async (idOrganization) => {
+  const getUrbanization = async (idUrbanization) => {
     const response = await sendRequest(
-      `${urlApi}/organizations/${idOrganization}`,
+      `${urlApi}/urbanizations/${idUrbanization}`,
       null,
       "GET",
       true
@@ -37,7 +37,7 @@ export default function Create() {
       //Response API
       if (!response.data?.error) {
         //Importtant
-        setOrganization(response);
+        setUrbanization(response);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -51,7 +51,7 @@ export default function Create() {
 
   const handleSubmit = async (data) => {
     const response = await sendRequest(
-      `${urlApi}/organizations/${organization?.data?.results.organization.id}`,
+      `${urlApi}/urbanizations/${urbanization?.data?.results.urbanization.id}`,
       data,
       "PUT",
       true
@@ -84,10 +84,10 @@ export default function Create() {
           Regresar
         </Button>
 
-        <OrganizationForm
+        <UrbanizationForm
           onSubmitForm={handleSubmit}
           updating={true}
-          organizationUpdate={organization?.data?.results?.organization}
+          urbanizationUpdate={urbanization?.data?.results?.urbanization}
         />
       </Container>
     </>

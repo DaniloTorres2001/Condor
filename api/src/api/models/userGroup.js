@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const UserGroup = sequelize.define(
-    "UserGroup",
+  const UserFamily = sequelize.define(
+    "UserFamily",
     {
       id: {
         type: DataTypes.BIGINT,
@@ -11,5 +11,5 @@ module.exports = (sequelize, DataTypes) => {
     { timestamps: false }
   );
 
-  return UserGroup;
+  return UserFamily;
 };

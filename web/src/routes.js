@@ -6,30 +6,30 @@ import DashboardLayout from "./layouts/dashboard";
 import Login from "./pages/login/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
 
-// Groups
+// Families
 
-import Groups from "./pages/group/Groups";
-import GroupCreate from "./pages/group/create";
-import GroupUpdate from "./pages/group/Update";
+import Families from "./pages/family/Families";
+import FamilyCreate from "./pages/family/create";
+import FamilyUpdate from "./pages/family/Update";
 
 // User
 import User from "./pages/User/User";
 import UserCreate from "./pages/User/Create";
 import UserUpdate from "./pages/User/Update";
 
-// Organization
+// Urbanization
 
-import Organization from "./pages/organization/Organization";
-import OrganizationCreate from "./pages/organization/Create";
-import OrganizationUpdate from "./pages/organization/Update";
+import Urbanization from "./pages/urbanization/Urbanization";
+import UrbanizationCreate from "./pages/urbanization/Create";
+import UrbanizationUpdate from "./pages/urbanization/Update";
 
 // Profile
 
 import Profile from "./pages/profile/profile";
 
-// Profile
+// Payment
 
-import Pagos from "./pages/carreras/pagos";
+import Payments from "./pages/carreras/payments";
 
 export default function Router() {
   return useRoutes([
@@ -48,25 +48,25 @@ export default function Router() {
           ],
         },
         {
-          path: "groups",
+          path: "families",
           element: <Outlet />,
           children: [
-            { path: "", element: <Groups /> },
-            { path: "create", element: <GroupCreate /> },
-            { path: "update/:id", element: <GroupUpdate /> },
+            { path: "", element: <Families /> },
+            { path: "create", element: <FamilyCreate /> },
+            { path: "update/:id", element: <FamilyUpdate /> },
           ],
         },
         {
-          path: "organizations",
+          path: "urbanizations",
           element: <Outlet />,
           children: [
-            { path: "", element: <Organization /> }, // Organization
-            { path: "create", element: <OrganizationCreate /> },
-            { path: "update/:id", element: <OrganizationUpdate /> },
+            { path: "", element: <Urbanization /> }, // Urbanization
+            { path: "create", element: <UrbanizationCreate /> },
+            { path: "update/:id", element: <UrbanizationUpdate /> },
           ],
         },
         { path: "profile", element: <Profile /> },
-        { path: "pagos", element: <Pagos /> },
+        { path: "payments", element: <Payments /> },
       ],
     },
 

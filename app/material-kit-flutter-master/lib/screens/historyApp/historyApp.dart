@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:material_kit_flutter/constants/Theme.dart';
 import 'package:material_kit_flutter/constants/enums.dart';
@@ -15,12 +14,13 @@ class HistoryApp extends StatefulWidget {
 }
 
 class _HistoryAppState extends State<HistoryApp> {
-  RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   var allSecureStorage = {};
 
   void onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
-    setState(() { });
+    setState(() {});
     refreshController.refreshCompleted();
   }
 
@@ -32,7 +32,9 @@ class _HistoryAppState extends State<HistoryApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Ultimas carreras"), backgroundColor: MaterialColors.blueMain),
+        appBar: AppBar(
+            title: Text("Ultimas carreras"),
+            backgroundColor: MaterialColors.blueMain),
         backgroundColor: MaterialColors.bgColorScreen,
         drawer: MaterialDrawer(currentPage: "historyApp"),
         body: SmartRefresher(
@@ -45,7 +47,8 @@ class _HistoryAppState extends State<HistoryApp> {
           onLoading: onLoading,
           child: FutureBuilder(
               future: getVars(),
-              builder: (BuildContext context, AsyncSnapshot<List<CarRide>> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<CarRide>> snapshot) {
                 if (snapshot.hasData) {
                   List<CarRide> data = snapshot.data ?? [];
                   return Container(
@@ -55,20 +58,24 @@ class _HistoryAppState extends State<HistoryApp> {
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         CarRide element = data[index];
-                        String date = getTimeFromString(element.requestDate,isLocal: true).
-                          toString().substring(0, 16);
+                        String date = getTimeFromString(element.requestDate,
+                                isLocal: true)
+                            .toString()
+                            .substring(0, 16);
                         return Card(
                           child: ListTile(
                               dense: true,
                               tileColor: Colors.white30,
                               leading: Text('#${element.id}'),
-                              title: Text("${element.driver} => ${element.passenger}", style: boldStyle(size: 14)),
+                              title: Text(
+                                  "${element.driver} => ${element.passenger}",
+                                  style: boldStyle(size: 14)),
                               trailing: PopupMenuButton<popupButtonDecisition>(
                                 onSelected: (popupButtonDecisition result) {
                                   showInfo(context, element, date);
                                 },
                                 itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<popupButtonDecisition>>[
+                                    <PopupMenuEntry<popupButtonDecisition>>[
                                   const PopupMenuItem<popupButtonDecisition>(
                                     value: popupButtonDecisition.view,
                                     child: Text('Ver'),
@@ -81,20 +88,20 @@ class _HistoryAppState extends State<HistoryApp> {
                   );
                 }
                 return Container();
-              }
-          ),
-        )
-    );
+              }),
+        ));
   }
 
   Future<List<CarRide>> getVars() async {
     try {
       allSecureStorage = await getAllSecureStorage();
-      var carRideAll = await CarRide.getCarRideAll(allSecureStorage['codeOrganization'] ?? '',
+      var carRideAll = await CarRide.getCarRideAll(
+          allSecureStorage['codeUrbanization'] ?? '',
           allSecureStorage['user'] ?? '');
-      carRideAll.removeWhere((element) => (element.driver == null || element.passenger == null));
+      carRideAll.removeWhere(
+          (element) => (element.driver == null || element.passenger == null));
       return carRideAll;
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       print("getVars ${e.toString()}");
     }
     return [];
@@ -114,34 +121,50 @@ class _HistoryAppState extends State<HistoryApp> {
                   textCustom('Fecha solicitud', isBold: true, size: 16),
                   Text('$date'),
                   Divider(),
-                  userName != carRide.passenger ? Column(
-                    children: [
-                      textCustom('Usuario pasajero', isBold: true, size: 16),
-                      Text('${carRide.passenger}'),
-                      textCustom("Calificación otorgada", isBold: true, size: 16),
-                      carRide.finalComments != null ?
-                      Text('${carRide.finalComments!['ratingPassenger'] ?? 'Sin calificar'}') : Container(),
-                      textCustom("Comentarios", isBold: true, size: 16),
-                      carRide.finalComments != null ? Text('${carRide.finalComments!['commentPassenger'] ?? ''}')
-                          : Container(),
-                    ],
-                  ) : Container(),
+                  userName != carRide.passenger
+                      ? Column(
+                          children: [
+                            textCustom('Usuario pasajero',
+                                isBold: true, size: 16),
+                            Text('${carRide.passenger}'),
+                            textCustom("Calificación otorgada",
+                                isBold: true, size: 16),
+                            carRide.finalComments != null
+                                ? Text(
+                                    '${carRide.finalComments!['ratingPassenger'] ?? 'Sin calificar'}')
+                                : Container(),
+                            textCustom("Comentarios", isBold: true, size: 16),
+                            carRide.finalComments != null
+                                ? Text(
+                                    '${carRide.finalComments!['commentPassenger'] ?? ''}')
+                                : Container(),
+                          ],
+                        )
+                      : Container(),
                   Divider(),
-                  userName != carRide.driver ? Column(
-                    children: [
-                      textCustom('Usuario conductor', isBold: true, size: 16),
-                      Text('${carRide.driver}'),
-                      textCustom("Calificación otorgada", isBold: true, size: 16),
-                      carRide.finalComments != null ? Text('${carRide.finalComments!['ratingDriver'] ?? 'Sin calificar'}')
-                          : Container(),
-                      textCustom("Comentarios", isBold: true, size: 16),
-                      carRide.finalComments != null ? Text('${carRide.finalComments!['commentDriver'] ?? ''}')
-                          : Container(),
-                    ],
-                  ) : Container(),
+                  userName != carRide.driver
+                      ? Column(
+                          children: [
+                            textCustom('Usuario conductor',
+                                isBold: true, size: 16),
+                            Text('${carRide.driver}'),
+                            textCustom("Calificación otorgada",
+                                isBold: true, size: 16),
+                            carRide.finalComments != null
+                                ? Text(
+                                    '${carRide.finalComments!['ratingDriver'] ?? 'Sin calificar'}')
+                                : Container(),
+                            textCustom("Comentarios", isBold: true, size: 16),
+                            carRide.finalComments != null
+                                ? Text(
+                                    '${carRide.finalComments!['commentDriver'] ?? ''}')
+                                : Container(),
+                          ],
+                        )
+                      : Container(),
                   Divider(),
                   textCustom("Valor de la Carrera", isBold: true, size: 16),
-                  Text('\$ ${carRide.tip}')
+                  Text('\$ ${carRide.pay}')
                 ],
               ),
             ),
@@ -149,7 +172,7 @@ class _HistoryAppState extends State<HistoryApp> {
               TextButton(
                 child: Text('Regresar', style: buttonYellowStyle),
                 style: bottonBorderBlue,
-                onPressed: ()  {
+                onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
@@ -158,5 +181,3 @@ class _HistoryAppState extends State<HistoryApp> {
         });
   }
 }
-
-
