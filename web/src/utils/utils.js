@@ -1,3 +1,5 @@
+/** @format */
+import { urlApi } from "./constants";
 const responseFormat = (
   error = false,
   message = "",
@@ -61,3 +63,26 @@ export const setUserSession = (data) => {
 export const getUserSession = () => {
   return JSON.parse(localStorage.getItem("sesion"));
 };
+export const forgetPassword = async (emailUser) => {
+  const response = await fetch(`${urlApi}/auth/forgotP`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: emailUser }),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export async function resetPassword(token, password) {
+  const response = await fetch(`${urlApi}/auth/resetPassword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token, password }),
+  });
+  const data = await response.json();
+  return data;
+}

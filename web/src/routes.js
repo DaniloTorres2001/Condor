@@ -1,9 +1,13 @@
+/** @format */
+
 import { Navigate, useRoutes, Outlet } from "react-router-dom";
 
 // layouts
 import DashboardLayout from "./layouts/dashboard";
 //
 import Login from "./pages/login/Login";
+import ForgetPassword from "./pages/login/forgotPassword";
+import ResetPassword from "./pages/login/resetPassword";
 import Dashboard from "./pages/dashboard/Dashboard";
 
 // Groups
@@ -71,6 +75,8 @@ export default function Router() {
     },
 
     { path: "login", element: <Login /> },
+    { path: "forget-password", element: <ForgetPassword /> },
+    { path: "reset-password", element: <ResetPassword /> },
     { path: "/", element: <Navigate to="/dashboard/home" /> },
     { path: "*", element: <Navigate to="/dashboard/home" replace /> },
   ]);
