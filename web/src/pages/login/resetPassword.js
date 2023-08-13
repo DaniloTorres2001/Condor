@@ -21,7 +21,7 @@ import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { sendRequest, setUserSession } from "../../utils/utils";
+import { resetPassword } from "../../utils/utils";
 
 import { urlApi, validationErrors } from "../../utils/constants";
 
@@ -34,17 +34,18 @@ import * as Yup from "yup";
 const theme = createTheme();
 
 const LoginFormScheme = Yup.object().shape({
-  username: Yup.string()
-    .max(75, validationErrors.user.username.max)
-    .required(validationErrors.user.username.required),
   password: Yup.string()
+    .max(75, validationErrors.user.password.max)
+    .required(validationErrors.user.password.required),
+  confirmPassword: Yup.string()
     .max(50, validationErrors.user.password.max)
     .required(validationErrors.user.password.required),
 });
 
-export default function Login() {
+export default function ResetPassword() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [restoreFLag, setRestoreFLag] = useState(false);
   const [snackBar, setSnackBar] = useState({});
 
@@ -54,6 +55,9 @@ export default function Login() {
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
+  };
+  const handleShowCnfirmPassword = () => {
+    setShowConfirmPassword((show) => !show);
   };
 
   const themetipogr = createTheme({
@@ -67,48 +71,52 @@ export default function Login() {
       },
     },
   });
-  const handleRedirect = () => {
-    console.log("redirect");
-    navigate("/forget-password", { replace: true });
-  };
+
   const formik = useFormik({
     initialValues: {
-      username: "",
       password: "",
+      confirmPassword: "",
     },
     validationSchema: LoginFormScheme,
-
+    validate: (values) => {
+      const errors = {};
+      if (values.password !== values.confirmPassword) {
+        errors.confirmPassword = "Las contraseñas no coinciden";
+      }
+      return errors;
+    },
     onSubmit: (values) => {
       LoginEvent(values);
     },
   });
 
   const LoginEvent = async (values) => {
-    const response = await sendRequest(
-      `${urlApi}/auth/signin`,
-      values,
-      "POST",
-      false
+    console.log("navigate", navigate.pathname);
+    let url = window.location.href;
+    console.log("windows", url.split("token=")[1]);
+    const response = await resetPassword(
+      url.split("token=")[1],
+      values.password
     );
 
-    if (!response.error) {
-      //Response API
-      if (!response.data?.error) {
-        //Set session
-        setUserSession(response.data?.results);
+    // if (!response.error) {
+    //   //Response API
+    //   if (!response.data?.error) {
+    //     //Set session
+    //     setUserSession(response.data?.results);
 
-        navigate("/dashboard/home", { replace: true });
-      } else {
-        const errorMessage =
-          response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
+    //     navigate("/dashboard/home", { replace: true });
+    //   } else {
+    //     const errorMessage =
+    //       response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
 
-        setSnackBar({ opened: true, message: errorMessage, type: "error" });
-        setRestoreFLag(true);
-      }
-    } else {
-      setSnackBar({ opened: true, message: response.message, type: "error" });
-      setRestoreFLag(true);
-    }
+    //     setSnackBar({ opened: true, message: errorMessage, type: "error" });
+    //     setRestoreFLag(true);
+    //   }
+    // } else {
+    //   setSnackBar({ opened: true, message: response.message, type: "error" });
+    //   setRestoreFLag(true);
+    // }
   };
 
   return (
@@ -150,32 +158,18 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Iniciar sesión
+              Cambiar contraseña
             </Typography>
             <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 fullWidth
-                id="username"
-                label="Usuario"
-                name="username"
-                autoComplete="username"
-                autoFocus
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.username && Boolean(formik.errors.username)
-                }
-                helperText={formik.touched.username && formik.errors.username}
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                name="password"
-                label="Contraseña"
-                type={showPassword ? "text" : "password"}
                 id="password"
-                autoComplete="current-password"
+                label="Contraseña"
+                name="password"
+                autoComplete="password"
+                type={showPassword ? "text" : "password"}
+                autoFocus
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -192,13 +186,38 @@ export default function Login() {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
+              <TextField
+                margin="normal"
+                fullWidth
+                name="confirmPassword"
+                label="Confirmar contraseña"
+                type={showConfirmPassword ? "text" : "password"}
+                id="password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleShowCnfirmPassword} edge="end">
+                        <Icon
+                          icon={showConfirmPassword ? eyeFill : eyeOffFill}
+                        />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+                helperText={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                }
+              />
               {restoreFLag && (
                 <ThemeProvider theme={themetipogr}>
-                  <Typography
-                    component="h6"
-                    variant="h6"
-                    onClick={handleRedirect}
-                  >
+                  <Typography component="h6" variant="h6">
                     Recuperar contraseña?
                   </Typography>
                 </ThemeProvider>
@@ -209,7 +228,7 @@ export default function Login() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Login
+                Cambiar
               </Button>
               {/* <Grid container>
                 <Grid item xs>
