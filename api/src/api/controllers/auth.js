@@ -1,10 +1,15 @@
+/** @format */
+
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-const { User, Organization} = require("../models");
+const { User, Organization } = require("../models");
 const { registerValidation, loginValidation } = require("../validations/auth");
 const { createToken } = require("../utils/utils");
-
+const nodemailer = require("../utils/nodemailer");
+const JWT_SECRET = process.env.JWT_SECRET;
+const jwt = require("jsonwebtoken");
+const { encryptData } = require("../utils/utils");
 const {
   successResponse,
   errorResponse,
@@ -25,9 +30,8 @@ const login = async (req, res) => {
     const user = await User.findOne({
       where: {
         [Op.or]: [{ username }, { email: username }],
-      }, include: [
-        Organization
-      ]
+      },
+      include: [Organization],
     });
 
     if (!user)
@@ -45,15 +49,18 @@ const login = async (req, res) => {
     // List roles
     const roles = (await user.getRoles())?.map((r) => r.code) ?? [];
 
-    const token = createToken({
-      id: user.id,
-      username: user.username,
-      codeOrganization: user.codeOrganization,
-      roles: roles,
-    }, req.body?.mode ? "30d" : "");  
-    let userReturn = user.dataValues
-    userReturn.roles = roles 
-    delete userReturn.password 
+    const token = createToken(
+      {
+        id: user.id,
+        username: user.username,
+        codeOrganization: user.codeOrganization,
+        roles: roles,
+      },
+      req.body?.mode ? "30d" : ""
+    );
+    let userReturn = user.dataValues;
+    userReturn.roles = roles;
+    delete userReturn.password;
     return res.status(200).json(
       successResponse(
         "Login success",
@@ -64,8 +71,8 @@ const login = async (req, res) => {
         res.statusCode
       )
     );
-  } catch (err) { 
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     res
       .status(500)
       .json(errorResponse("Ocurrió un error en el servidor.", res.statusCode));
@@ -93,8 +100,66 @@ const register = async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 };
+const forgotPassword = async (req, res) => {
+  console.log("Forgot Password");
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({
+      where: { email: email },
+    });
+    if (user) {
+      const options = { expiresIn: "1h" };
+      const token = jwt.sign({ email }, JWT_SECRET, options);
+      console.log("Token Enviado", token);
+      let mailOptions = {
+        from: process.env.EMAIL_SENDER_USER,
+        to: email,
+        subject: "Restablecer contraseña",
+        text: `Para restablecer tu contraseña, haz click en este link: ${process.env.API_FRONTEND}/reset-password?token=${token}`,
+      };
+      nodemailer.sendMail(mailOptions);
+      res.status(200).json({ status: 200, message: "Email enviado" });
+    } else {
+      res.status(200).json({ status: 200, message: "Email enviado" });
+    }
+  } catch (error) {
+    console.error("Error al enviar el email:", error);
+    res.status(400).json({ status: 400, message: "Email no encontrado" });
+  }
+};
+const resetPassword = async (req, res) => {
+  console.log("anuel");
+  try {
+    const { token, password } = req.body;
+    const payload_token = jwt.verify(token, JWT_SECRET);
+    console.log("Token recibido en back", payload_token);
+    if (payload_token) {
+      const user = await User.findOne({
+        where: { email: payload_token.email },
+      });
+      console.log("Usuario encontrado", user, password);
+      await user.update({
+        password: password,
+      });
+      // encryptUserPassword(user);
 
+      res.status(200).json({ valid: true });
+    } else {
+      res.status(400).json({ valid: false });
+    }
+  } catch (error) {
+    console.error("Error al verificar el token:", error);
+    res.status(400).json({ valid: false });
+  }
+};
+const encryptUserPassword = async (user) => {
+  if (user.changed("password")) {
+    user.password = await encryptData(user.password);
+  }
+};
 module.exports = {
   login,
   register,
+  forgotPassword,
+  resetPassword,
 };
