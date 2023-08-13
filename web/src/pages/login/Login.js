@@ -68,7 +68,6 @@ export default function Login() {
     },
   });
   const handleRedirect = () => {
-    console.log("redirect");
     navigate("/forget-password", { replace: true });
   };
   const formik = useFormik({

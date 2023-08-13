@@ -91,13 +91,14 @@ export default function ResetPassword() {
   });
 
   const LoginEvent = async (values) => {
-    console.log("navigate", navigate.pathname);
     let url = window.location.href;
-    console.log("windows", url.split("token=")[1]);
     const response = await resetPassword(
       url.split("token=")[1],
       values.password
     );
+    if (response) {
+      navigate("/login", { replace: true });
+    }
 
     // if (!response.error) {
     //   //Response API
@@ -215,13 +216,7 @@ export default function ResetPassword() {
                   formik.errors.confirmPassword
                 }
               />
-              {restoreFLag && (
-                <ThemeProvider theme={themetipogr}>
-                  <Typography component="h6" variant="h6">
-                    Recuperar contraseña?
-                  </Typography>
-                </ThemeProvider>
-              )}
+
               <Button
                 type="submit"
                 fullWidth

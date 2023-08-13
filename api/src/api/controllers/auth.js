@@ -101,7 +101,6 @@ const register = async (req, res) => {
   }
 };
 const forgotPassword = async (req, res) => {
-  console.log("Forgot Password");
   try {
     const { email } = req.body;
     const user = await User.findOne({
@@ -110,7 +109,6 @@ const forgotPassword = async (req, res) => {
     if (user) {
       const options = { expiresIn: "1h" };
       const token = jwt.sign({ email }, JWT_SECRET, options);
-      console.log("Token Enviado", token);
       let mailOptions = {
         from: process.env.EMAIL_SENDER_USER,
         to: email,
@@ -128,16 +126,13 @@ const forgotPassword = async (req, res) => {
   }
 };
 const resetPassword = async (req, res) => {
-  console.log("anuel");
   try {
     const { token, password } = req.body;
     const payload_token = jwt.verify(token, JWT_SECRET);
-    console.log("Token recibido en back", payload_token);
     if (payload_token) {
       const user = await User.findOne({
         where: { email: payload_token.email },
       });
-      console.log("Usuario encontrado", user, password);
       await user.update({
         password: password,
       });
