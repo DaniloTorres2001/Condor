@@ -55,7 +55,6 @@ export default function ForgetPassword() {
   });
 
   const LoginEvent = async (values) => {
-    console.log("values", values.email);
     const response = await forgetPassword(values.email);
 
     // if (!response.error) {

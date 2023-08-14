@@ -1,3 +1,5 @@
+/** @format */
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -7,7 +9,6 @@ const encryptData = async (data) => {
   return hash;
 };
 
-
 function createToken(data, days = "") {
   return jwt.sign(data, process.env.JWT_SECRET, {
     expiresIn: days == "" ? 86400 * 1 : days,
@@ -16,5 +17,5 @@ function createToken(data, days = "") {
 
 module.exports = {
   encryptData,
-  createToken
+  createToken,
 };
