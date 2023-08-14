@@ -614,12 +614,3 @@ BEGIN
   RETURN NEW;  
 END;
 $$ LANGUAGE plpgsql;
-
-
-CREATE TABLE public."CreditBalancesPayments" (
-  id bigint NOT NULL,
-  user_id character varying(25) REFERENCES public."Families"(code) ON UPDATE CASCADE ON DELETE CASCADE,
-  "init_month" timestamp with time zone NOT NULL,
-  "finish_month" timestamp with time zone NOT NULL,
-  pay numeric DEFAULT 0
-);

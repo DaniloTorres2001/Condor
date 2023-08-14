@@ -232,6 +232,7 @@ export default function Families() {
                   <TableCell>Alicuota</TableCell>
                   <TableCell>Carreras Solicitadas</TableCell>
                   <TableCell>Carreras Realizadas</TableCell>
+                  <TableCell>Saldo a favor</TableCell>
                   <TableCell>Total a Pagar</TableCell>
                   <TableCell>Opciones</TableCell>
                 </TableRow>
@@ -267,6 +268,21 @@ export default function Families() {
                         return acc;
                       }, 0)}
                     </TableCell>
+                    {/* Saldo a favor */}
+                    <TableCell>$ 
+                      {Number(row.aliquot) + Number(payments?.payments?.reduce((acc, row2) => {
+                          if (row2.familyCode === row.code && row2.stateuser === "pasajero") {
+                              return acc + Number(row2.payvalue);
+                          }
+                          return acc;
+                      }, 0)) - Number(payments?.payments?.reduce((acc, row2) => {
+                          if (row2.familyCode === row.code && row2.stateuser === "conductor") {
+                              return acc + Number(row2.payvalue);
+                          }
+                          return acc;
+                      }, 0))}
+                    </TableCell>
+                    {/* Total a pagar */}
                     <TableCell>$
                       {Number(row.aliquot) + Number(payments?.payments?.reduce((acc, row2) => {
                           if (row2.familyCode === row.code && row2.stateuser === "pasajero") {
