@@ -1,3 +1,5 @@
+/** @format */
+
 const express = require("express");
 const auth = require("./auth");
 const user = require("./user");
@@ -6,6 +8,7 @@ const role = require("./role");
 const carRide = require("./carRide");
 const urbanization = require("./urbanization");
 const payment = require("./payment");
+const valuesPerMonth = require("./valuesPerMonth");
 
 const router = express.Router();
 
@@ -17,5 +20,5 @@ router.use("/roles", role);
 router.use("/carRides", carRide);
 router.use("/urbanizations", urbanization);
 router.use("/payments", payment);
-
+router.use("/valuesPerMonth", valuesPerMonth);
 module.exports = router;

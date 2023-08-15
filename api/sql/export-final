@@ -259,6 +259,22 @@ ALTER TABLE public."UserRoles_id_seq" OWNER TO postgres;
 ALTER SEQUENCE public."UserRoles_id_seq" OWNED BY public."UserRoles".id;
 
 --
+-- Name: ValuesPerMonths; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."ValuesPerMonths" (
+  "id" SERIAL PRIMARY KEY,
+  "familyCode" VARCHAR NOT NULL,
+  "payvalue" NUMERIC(10, 2) NOT NULL,
+  "payDriver" NUMERIC(10, 2) NOT NULL,
+  "payPassenger" NUMERIC(10, 2) NOT NULL,
+  "issueDate" TIMESTAMP NOT NULL
+);
+
+ALTER TABLE public."ValuesPerMonths" OWNER TO postgres;
+
+
+--
 -- Name: Users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -546,17 +562,76 @@ ALTER TABLE ONLY public."Payments"
 
 -- Triggers
 
-CREATE FUNCTION add_payment() RETURNS trigger AS $$
-BEGIN
-  INSERT INTO "Payments" ("payvalue") VALUES (NEW.pay);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE FUNCTION add_payment() RETURNS trigger AS $$
+-- BEGIN
+--   INSERT INTO "Payments" ("payvalue") VALUES (NEW.pay);
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER add_payment
-AFTER INSERT ON "CarRides"
-FOR EACH ROW EXECUTE PROCEDURE add_payment();
+-- CREATE TRIGGER add_payment
+-- AFTER INSERT ON "CarRides"
+-- FOR EACH ROW EXECUTE PROCEDURE add_payment();
 
+-- CREATE FUNCTION get_family_code(user_name VARCHAR) 
+-- RETURNS VARCHAR AS $$
+-- DECLARE
+--   family_code VARCHAR;  
+-- BEGIN
+--   SELECT uf."codeFamily"
+--   INTO family_code
+--   FROM "UserFamilies" uf
+--   WHERE uf.username = user_name;
+
+--   RETURN family_code;  
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+
+-- CREATE FUNCTION insert_payments() RETURNS trigger AS $$
+-- BEGIN
+--   INSERT INTO "Payments" ("payvalue", "issueDate", "familyCode", "stateuser")
+--     VALUES (NEW."pay", CURRENT_TIMESTAMP, get_family_code(NEW.passenger), 'pasajero');
+  
+--   INSERT INTO "Payments" ("payvalue", "issueDate","familyCode", "stateuser")
+--     VALUES (NEW."pay", CURRENT_TIMESTAMP, get_family_code(NEW.driver), 'conductor');
+
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER insert_payments
+-- AFTER INSERT ON "CarRides"
+-- FOR EACH ROW EXECUTE PROCEDURE insert_payments();
+
+-- CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
+-- BEGIN
+--   INSERT INTO "Payments" ("payvalue", "issueDate") 
+--     VALUES (NEW.pay, CURRENT_TIMESTAMP);
+
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
+-- BEGIN
+--   INSERT INTO "Payments" ("payvalue", "issueDate", "familyCode") 
+--     VALUES (NEW.pay, CURRENT_TIMESTAMP, get_family_code(NEW.passenger));
+  
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
+-- BEGIN
+--   INSERT INTO "Payments" ("payvalue", "issueDate", "stateuser") 
+--     VALUES (NEW.pay, CURRENT_TIMESTAMP, 'pasajero');
+
+--   RETURN NEW;  
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- Función para obtener el código de la familia
 CREATE FUNCTION get_family_code(user_name VARCHAR) 
 RETURNS VARCHAR AS $$
 DECLARE
@@ -571,12 +646,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Función para insertar pagos
 CREATE FUNCTION insert_payments() RETURNS trigger AS $$
 BEGIN
+  -- Insertar el pago para el pasajero
   INSERT INTO "Payments" ("payvalue", "issueDate", "familyCode", "stateuser")
     VALUES (NEW."pay", CURRENT_TIMESTAMP, get_family_code(NEW.passenger), 'pasajero');
   
+  -- Insertar el pago para el conductor
   INSERT INTO "Payments" ("payvalue", "issueDate","familyCode", "stateuser")
     VALUES (NEW."pay", CURRENT_TIMESTAMP, get_family_code(NEW.driver), 'conductor');
 
@@ -584,33 +661,73 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Trigger para ejecutar la función insert_payments
 CREATE TRIGGER insert_payments
 AFTER INSERT ON "CarRides"
 FOR EACH ROW EXECUTE PROCEDURE insert_payments();
 
-CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
+
+
+-- for a updateValuesPerMoth
+CREATE OR REPLACE FUNCTION update_values_per_month() RETURNS TRIGGER AS $$
+DECLARE
+  existing_record RECORD;
+  previous_month_negative_payvalue NUMERIC;
+  test_timestamp TIMESTAMP;
+  aliquot_value NUMERIC;
 BEGIN
-  INSERT INTO "Payments" ("payvalue", "issueDate") 
-    VALUES (NEW.pay, CURRENT_TIMESTAMP);
+  -- Leer la fecha de prueba de la tabla "Configurations"
+  SELECT "testTimestamp" INTO test_timestamp
+  FROM public."Configurations"
+  LIMIT 1;
+
+  -- Obtener el valor de la alícuota para el código de familia
+  SELECT aliquot INTO aliquot_value
+  FROM "Families"
+  WHERE code = NEW."familyCode";
+
+  -- Buscar si hay un registro en el mes anterior con valores negativos
+  SELECT SUM("payvalue") INTO previous_month_negative_payvalue
+  FROM "ValuesPerMonths"
+  WHERE "familyCode" = NEW."familyCode"
+    AND "payvalue" < 0
+    AND EXTRACT(MONTH FROM "issueDate") = EXTRACT(MONTH FROM test_timestamp) - 1
+    AND EXTRACT(YEAR FROM "issueDate") = EXTRACT(YEAR FROM test_timestamp);
+
+  SELECT INTO existing_record
+    *
+  FROM "ValuesPerMonths"
+  WHERE "familyCode" = NEW."familyCode"
+    AND EXTRACT(MONTH FROM "issueDate") = EXTRACT(MONTH FROM test_timestamp)
+    AND EXTRACT(YEAR FROM "issueDate") = EXTRACT(YEAR FROM test_timestamp);
+
+  IF existing_record IS NULL THEN
+    -- Inicializar con el valor de la alícuota y sumar el valor negativo del mes anterior si existe
+    INSERT INTO "ValuesPerMonths" ("familyCode", "payvalue", "payDriver", "payPassenger", "issueDate")
+      VALUES (NEW."familyCode", aliquot_value + COALESCE(previous_month_negative_payvalue, 0), 0, 0, test_timestamp);
+  END IF;
+
+  -- Actualizar el valor basado en si es conductor o pasajero
+  IF NEW.stateuser = 'conductor' THEN
+    UPDATE "ValuesPerMonths"
+      SET "payvalue" = "payvalue" - NEW.payvalue,
+          "payDriver" = "payDriver" + NEW.payvalue
+      WHERE "familyCode" = NEW."familyCode"
+        AND EXTRACT(MONTH FROM "issueDate") = EXTRACT(MONTH FROM test_timestamp)
+        AND EXTRACT(YEAR FROM "issueDate") = EXTRACT(YEAR FROM test_timestamp);
+  ELSE
+    UPDATE "ValuesPerMonths"
+      SET "payvalue" = "payvalue" + NEW.payvalue,
+          "payPassenger" = "payPassenger" + NEW.payvalue
+      WHERE "familyCode" = NEW."familyCode"
+        AND EXTRACT(MONTH FROM "issueDate") = EXTRACT(MONTH FROM test_timestamp)
+        AND EXTRACT(YEAR FROM "issueDate") = EXTRACT(YEAR FROM test_timestamp);
+  END IF;
 
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
-BEGIN
-  INSERT INTO "Payments" ("payvalue", "issueDate", "familyCode") 
-    VALUES (NEW.pay, CURRENT_TIMESTAMP, get_family_code(NEW.passenger));
-  
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION add_payment() RETURNS trigger AS $$
-BEGIN
-  INSERT INTO "Payments" ("payvalue", "issueDate", "stateuser") 
-    VALUES (NEW.pay, CURRENT_TIMESTAMP, 'pasajero');
-
-  RETURN NEW;  
-END;
-$$ LANGUAGE plpgsql;
+CREATE TRIGGER update_values_per_month
+AFTER INSERT ON "Payments"
+FOR EACH ROW EXECUTE PROCEDURE update_values_per_month();
