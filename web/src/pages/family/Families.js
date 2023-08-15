@@ -39,7 +39,6 @@ import CustomSnackbar from "../../components/app/CustomSnackbar";
 
 export default function Families() {
   const [families, setFamilies] = useState([]);
-  const [payments, setPayments] = useState([]);
   const [valuesPerMonth, setValuesPerMonth] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [selectedFamily, setSelectedFamily] = useState({});
@@ -60,7 +59,6 @@ export default function Families() {
 
   useEffect(() => {
     fetchFamilies(page, rowsPerPage);
-    fetchPayments(page, rowsPerPage);
     fetchValuesPerMonth(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
@@ -115,30 +113,6 @@ export default function Families() {
       onOpenSnackbar(true, response.message, "error");
     }
   };
-  const fetchPayments = async (pages, row, filterSearch) => {
-    const condition = filterSearch ? `&search=${filterSearch}` : "";
-
-    const response = await sendRequest(
-      `${urlApi}/payments?page=${pages}&size=${row}${condition}`,
-      null,
-      "GET",
-      true
-    );
-
-    if (!response.error) {
-      //Response API
-      if (!response.data?.error) {
-        setPayments(response.data?.results);
-      } else {
-        const errorMessage =
-          response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
-
-        onOpenSnackbar(true, errorMessage, "error");
-      }
-    } else {
-      onOpenSnackbar(true, response.message, "error");
-    }
-  };
 
   const handleOpenDeleteDialog = (family) => {
     setSelectedFamily(family);
@@ -159,7 +133,7 @@ export default function Families() {
   };
 
   const handleFilterSearch = (filterSearch) => {
-    fetchPayments(page, rowsPerPage, filterSearch);
+    fetchValuesPerMonth(page, rowsPerPage, filterSearch);
   };
 
   const handleDeleteFamily = async () => {
@@ -257,6 +231,7 @@ export default function Families() {
                   <TableCell>Alicuota</TableCell>
                   <TableCell>Carreras Solicitadas</TableCell>
                   <TableCell>Carreras Realizadas</TableCell>
+                  <TableCell>Saldo a favor</TableCell>
                   <TableCell>Total a Pagar</TableCell>
                   <TableCell>Saldo a Favor</TableCell>
                   <TableCell>Opciones</TableCell>
