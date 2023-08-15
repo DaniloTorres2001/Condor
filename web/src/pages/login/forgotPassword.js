@@ -57,22 +57,27 @@ export default function ForgetPassword() {
   const LoginEvent = async (values) => {
     const response = await forgetPassword(values.email);
 
-    // if (!response.error) {
-    //   //Response API
-    //   if (!response.data?.error) {
-    //     //Set session
-    //     setUserSession(response.data?.results);
+    if (!response.error) {
+      setSnackBar({
+        opened: true,
+        message: response.message,
+        type: "info",
+      });
 
-    //     navigate("/dashboard/home", { replace: true });
-    //   } else {
-    //     const errorMessage =
-    //       response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
+      // if (!response.data?.error) {
+      //   //Set session
+      //   setUserSession(response.data?.results);
 
-    //     setSnackBar({ opened: true, message: errorMessage, type: "error" });
-    //   }
-    // } else {
-    //   setSnackBar({ opened: true, message: response.message, type: "error" });
-    // }
+      //   navigate("/dashboard/home", { replace: true });
+      // } else {
+      //   const errorMessage =
+      //     response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
+
+      //   setSnackBar({ opened: true, message: errorMessage, type: "error" });
+      // }
+    } else {
+      setSnackBar({ opened: true, message: response.message, type: "error" });
+    }
   };
 
   return (

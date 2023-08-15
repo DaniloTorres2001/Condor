@@ -231,9 +231,8 @@ export default function Families() {
                   <TableCell>Alicuota</TableCell>
                   <TableCell>Carreras Solicitadas</TableCell>
                   <TableCell>Carreras Realizadas</TableCell>
-                  <TableCell>Saldo a favor</TableCell>
                   <TableCell>Total a Pagar</TableCell>
-                  <TableCell>Saldo a Favor</TableCell>
+                  <TableCell>Saldo a favor</TableCell>
                   <TableCell>Opciones</TableCell>
                 </TableRow>
               </TableHead>
