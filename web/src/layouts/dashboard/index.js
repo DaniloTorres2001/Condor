@@ -47,7 +47,11 @@ export default function DashboardLayout() {
         onCloseSidebar={() => setOpen(false)}
         user={auth}
       />
-      <MainStyle>
+      <MainStyle
+      sx={{
+        backgroundColor: "#F2F6FC",
+      }}
+      >
         <Outlet />
       </MainStyle>
     </RootStyle>

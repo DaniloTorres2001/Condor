@@ -84,13 +84,13 @@ export default function AccountPopover({ user }) {
         open={open}
         onClose={handleClose}
         anchorEl={anchorRef.current}
-        sx={{ width: 220 }}
+        sx={{ width: 220,}}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
             {user?.user?.fullName}
           </Typography>
-          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+          <Typography variant="body2" sx={{ color: "text.secondary"}} noWrap>
             {user?.user?.email}
           </Typography>
         </Box>
@@ -119,11 +119,25 @@ export default function AccountPopover({ user }) {
           </MenuItem>
         ))}
 
-        <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined" onClick={logOut}>
-            Salir
-          </Button>
-        </Box>
+      <Box sx={{ p: 2, pt: 1.5 }}>
+            <Button
+              fullWidth
+              color="inherit"
+              variant="outlined"
+              onClick={logOut}
+              sx={{
+                backgroundColor: 'transparent',
+                color: '#1B2144',
+                border: '1px solid #1B2144',
+                '&:hover': {
+                  backgroundColor: '#1B2144',
+                  color: '#FABB3FEB',
+                },
+              }}
+            >
+              Salir
+            </Button>
+          </Box>
       </MenuPopover>
     </>
   );

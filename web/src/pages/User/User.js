@@ -168,7 +168,7 @@ export default function User() {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          mb={5}
+          mb={2}
         >
           <Typography variant="h4" gutterBottom>
             Usuarios
@@ -183,34 +183,37 @@ export default function User() {
           </Button>
         </Stack>
         {/* Content */}
-
+        
+        <SearchBar onFetchData={handleFilterSearch} />
         <Card>
-          <SearchBar onFetchData={handleFilterSearch} />
-
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
+              <TableHead sx={{ backgroundColor: "#1B2144" }}>
                 <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Nombre</TableCell>
-                  <TableCell>Usuario</TableCell>
-                  <TableCell>Cédula</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Urbanizacion</TableCell>
+                  {[
+                    "ID", "Nombre", "Usuario", "Cédula", "Email", "Urbanizacion"
+                  ].map((label) => (
+                    <TableCell key={label} sx={{ color: "white" }}>
+                      {label}
+                    </TableCell>
+                  ))}
                   {auth?.user?.roles[0] === "002" && (
                     <TableCell>Familia</TableCell>
                   )}
-
                   <TableCell>{}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {users?.users?.map((row) => (
                   <TableRow
-                    hover
-                    key={row.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
+                  hover
+                  key={row.id}
+                  sx={{ 
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {backgroundColor: "rgba(250, 187, 63, 0.50) !important" },
+
+                  }}
+                >
                     <TableCell>{row.id}</TableCell>
                     <TableCell>{row.fullName}</TableCell>
                     <TableCell component="th" scope="row">

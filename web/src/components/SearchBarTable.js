@@ -20,10 +20,11 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
 
 const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   width: 240,
+  backgroundColor: "#FFFFFF",
   "&.Mui-focused": { boxShadow: theme.customShadows.z8 },
   "& fieldset": {
     borderWidth: `1px !important`,
-    borderColor: `${theme.palette.grey[500_32]} !important`,
+    borderColor: `${theme.palette.grey[500]} !important`,
   },
 }));
 
@@ -48,7 +49,7 @@ export default function UserSearchBar({ onFetchData }) {
             <Box
               component={Icon}
               icon={searchFill}
-              sx={{ color: "text.disabled" }}
+              sx={{ color: "text.primary" }}
             />
           </IconButton>
         }

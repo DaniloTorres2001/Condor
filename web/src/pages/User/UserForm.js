@@ -14,7 +14,6 @@ import {
   TextField,
   Box,
   Grid,
-  Typography,
   Button,
   InputAdornment,
   IconButton,
@@ -312,14 +311,11 @@ export default function UserForm({
           border: "1px solid",
           borderColor: grey[300],
           p: 4,
-          mt: 3,
+          mt: 2,
+          backgroundColor:"white"
         }}
       >
-        <Typography variant="h4" sx={{ textAlign: "center" }} gutterBottom>
-          Datos de usuario
-        </Typography>
-
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ pt: -2, pb:3, pr:4 , pl:4}}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
               <Box
@@ -338,7 +334,7 @@ export default function UserForm({
                   <Avatar
                     alt="Remy Sharp"
                     src={imageProfile?.image?.url || ""}
-                    sx={{ width: 120, height: 120, m: 1 }}
+                    sx={{ width: 120, height: 120, mb: 2 }}
                   />
                 </Link>
 
@@ -612,12 +608,12 @@ export default function UserForm({
               </>
             )}
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} sx={{ textAlign: 'right' }}>
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
-                fullWidth
+                //fullWidth
               >
                 {updating ? "Actualizar" : "Crear"}
               </Button>

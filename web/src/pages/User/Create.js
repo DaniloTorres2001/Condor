@@ -1,5 +1,5 @@
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Container, Button } from "@mui/material";
+import { Container, Button, Stack , Typography, Icon} from "@mui/material";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
 import UserForm from "./UserForm";
@@ -50,14 +50,25 @@ export default function Create() {
           stateSnackbar={snackBar}
           onCloseSnackbar={() => onCloseSnackbar}
         />
-        <Button
-          variant="contained"
-          // color="error"
-          component={RouterLink}
-          to="../"
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={3}
         >
-          Regresar
-        </Button>
+          <Typography variant="h4" sx={{ textAlign: "center" }} gutterBottom>
+            Datos de usuario
+          </Typography>
+          <Button
+            variant="contained"
+            // color="error"
+            component={RouterLink}
+            to="../"
+          >
+            Regresar
+          </Button>
+        </Stack>
 
         <UserForm
           onSubmitForm={onSubmitForm}

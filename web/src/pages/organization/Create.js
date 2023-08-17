@@ -1,4 +1,4 @@
-import { Container, Button } from "@mui/material";
+import { Container, Button , Stack, Typography} from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { urlApi } from "../../utils/constants";
 import { sendRequest } from "../../utils/utils";
@@ -48,10 +48,19 @@ export default function Create() {
           stateSnackbar={snackBar}
           onCloseSnackbar={() => onCloseSnackbar}
         />
-        <Button variant="contained" component={RouterLink} to="../">
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={2}
+        >
+          <Typography variant="h4" sx={{ textAlign: "center" }} gutterBottom>
+            Crear Urbanización
+          </Typography>
+          <Button variant="contained" component={RouterLink} to="../">
           Regresar
         </Button>
-
+        </Stack>
         <OrganizationForm onSubmitForm={handleSubmit} />
       </Container>
     </>

@@ -31,7 +31,7 @@ const ListItemStyle = styled((props) => (
   textTransform: "capitalize",
   paddingLeft: theme.spacing(5),
   paddingRight: theme.spacing(2.5),
-  color: theme.palette.text.secondary,
+  color: "#FFFFFF",
   "&:before": {
     top: 0,
     right: 0,
@@ -42,7 +42,7 @@ const ListItemStyle = styled((props) => (
     position: "absolute",
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: "#FFFFFF",
   },
 }));
 
@@ -72,10 +72,11 @@ function NavItem({ item, active }) {
   };
 
   const activeRootStyle = {
-    color: "primary.main",
+    //color: theme.palette.text.disabled, 
+    color: "#FABB3F",
     fontWeight: "fontWeightMedium",
     bgcolor: alpha(
-      theme.palette.primary.main,
+      theme.palette.text.disabled,
       theme.palette.action.selectedOpacity
     ),
     "&:before": { display: "block" },

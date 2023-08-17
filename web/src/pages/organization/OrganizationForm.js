@@ -52,12 +52,9 @@ export default function OrganizationForm({
           borderColor: grey[300],
           p: 4,
           mt: 3,
+          backgroundColor: "white"
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Crear urbanización
-        </Typography>
-
         <Box sx={{ p: 3 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>

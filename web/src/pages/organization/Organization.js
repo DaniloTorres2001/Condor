@@ -164,7 +164,7 @@ export default function Organization() {
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            mb={5}
+            mb={2}
           >
             <Typography variant="h4" gutterBottom>
               Urbanizaciones
@@ -179,26 +179,25 @@ export default function Organization() {
               Crear
             </Button>
           </Stack>
-
-          <Card>
             <SearchBar onFetchData={handleFilterSearch} />
-
+          <Card >
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 800 }} aria-label="simple table">
-                <TableHead>
+                <TableHead sx={{ backgroundColor: "#1B2144" }}>
                   <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Código</TableCell>
-                    <TableCell>Nombre</TableCell>
-                    <TableCell>Dirección</TableCell>
-                    <TableCell>Opciones</TableCell>
+                    {["ID", "Código", "Nombre", "Dirección", "Opciones"].map((label) => (
+                      <TableCell key={label} sx={{ color: "white" }}>{label}</TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {organizations?.organizations?.map((row) => (
                     <TableRow hover
                       key={row.id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "&:hover": {backgroundColor: "rgba(250, 187, 63, 0.50) !important" },
+                      }}  
                     >
                       <TableCell>{row.id}</TableCell>
                       <TableCell component="th" scope="row">

@@ -1,15 +1,14 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
+import "./styles/login.css";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -24,6 +23,9 @@ import { sendRequest, setUserSession } from "../../utils/utils";
 import { urlApi, validationErrors } from "../../utils/constants";
 
 import CustomSnackbar from "../../components/app/CustomSnackbar";
+import PersonIcon from '@mui/icons-material/Person';
+import LockPersonIcon from '@mui/icons-material/LockPerson'; 
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 //Formik
 import { useFormik } from "formik";
@@ -94,45 +96,60 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container 
+      component="main" sx={{ height: "100vh", backgroundColor: "#1B2144" }}>
         <CustomSnackbar
           stateSnackbar={snackBar}
           onCloseSnackbar={() => onCloseSnackbar}
         />
 
-        <CssBaseline />
+        <CssBaseline />        
         <Grid
           item
-          xs={false}
-          sm={4}
-          md={7}
+          xs={12}
+          sm={12}
+          md={12}
           sx={{
-            backgroundImage: "url(/static/images/login_condor.png)",
+            backgroundImage: "url(/static/images/login_condor_vector.png)",
+            backgroundSize: "contain",
+            backgroundPosition: "center top",
             backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            height: 300
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid 
+          container
+          item 
+          xs={12} 
+          sm={8} 
+          md={4} 
+          component={Paper}
+          elevation={3}
+          square
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "35px",
+            border: "1px solid rgba(0, 0, 0, 0.00)",
+            background: "rgba(250, 187, 63, 0.93)",
+            margin: "auto", // Center horizontally
+            mt: 2, // Add margin from the top
+            mb: 6, // Add margin from the bottom
+          }}
+          /*component={Paper} 
+          elevation={6} square*/>
           <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+            sx={{ my: 8, mx: 4 }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Iniciar sesión
-            </Typography>
+            
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <AccountCircleIcon sx={{ fontSize: "4rem", color: "#1B2144" }} />
+              <Typography component="h1" variant="h5" sx={{ mb: 3, color: "#1B2144", fontSize: "1.5rem", textAlign: "center" }}>
+                Iniciar sesión
+              </Typography>
+            </div>
             <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
@@ -148,6 +165,24 @@ export default function Login() {
                   formik.touched.username && Boolean(formik.errors.username)
                 }
                 helperText={formik.touched.username && formik.errors.username}
+                sx={{
+                  backgroundColor: "#FFFFFF", // White background
+                  color: "#1B2144", // Text color
+                  borderRadius: "10px", // Adjust as needed
+                  "& label": {
+                    color: "#1B2144", // Label text color
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "#1B2144", // Text color for input
+                  },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#1B2144" }} />
+                    </InputAdornment>
+                  ),
+                }}
               />
               <TextField
                 margin="normal"
@@ -157,7 +192,29 @@ export default function Login() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 autoComplete="current-password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+                sx={{
+                  backgroundColor: "#FFFFFF", // White background
+                  color: "#1B2144", // Text color
+                  borderRadius: "10px", // Adjust as needed
+                  "& label": {
+                    color: "#1B2144", // Label text color
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "#1B2144", // Text color for input
+                  },
+                }}
                 InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockPersonIcon sx={{ color: "#1B2144" }} />
+                    </InputAdornment>
+                  ),
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={handleShowPassword} edge="end">
@@ -166,22 +223,44 @@ export default function Login() {
                     </InputAdornment>
                   ),
                 }}
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
               />
-              {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Recordarme"
-              /> */}
+              {<FormControlLabel
+                  control={
+                    <Checkbox
+                      value="remember"
+                      color="primary"
+                      sx={{
+                        backgroundColor: "transparent", 
+                        transform: "scale(0.75)",
+                        "&.Mui-checked": {
+                          color: "#1B2144", 
+                        },
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography variant="body2" sx={{ fontSize: "0.9rem", color: "#1B2144" }}>
+                      Recuerdame
+                    </Typography>
+                  }
+                  sx={{
+                    "& .MuiTypography-root": {
+                    ml: -0.5,  
+                  },}}
+              />}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#1B2144", 
+                  color: "#FFFFFF", 
+                  "&:hover": {
+                    backgroundColor: "#0F131C",
+                  },
+                }}
               >
                 Login
               </Button>

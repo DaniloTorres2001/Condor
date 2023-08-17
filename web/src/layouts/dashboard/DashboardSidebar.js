@@ -28,7 +28,8 @@ const AccountStyle = styled("div")(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(2, 2.5),
   borderRadius: theme.shape.borderRadiusSm,
-  backgroundColor: theme.palette.grey[200],
+  backgroundColor: theme.palette.grey[300],
+  
 }));
 
 // ----------------------------------------------------------------------
@@ -68,23 +69,24 @@ export default function DashboardSidebar({
           height: "100%",
           display: "flex",
           flexDirection: "column",
+          backgroundColor: "#1B2144" 
         },
       }}
     >
-      <Box sx={{ px: 3, py: 3 }}>
+      <Box sx={{ px: 3, py: 3}}>
         <Box component={RouterLink} to="/" sx={{ display: "inline-flex" }}>
           <Logo />
         </Box>
       </Box>
 
-      <Box sx={{ mb: 5, mx: 2.5 }}>
+      <Box sx={{ mb: 5, mx: 2.5}}>
         <Link underline="none" component={RouterLink} to="#">
-          <AccountStyle>
+          <AccountStyle >
             <Avatar
               src={"/static/mock-images/avatars/avatar_default.jpg"}
               alt="photoURL"
             />
-            <Box sx={{ ml: 2 }}>
+            <Box sx={{ ml: 2}}>
               <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
                 {user?.user?.username}
               </Typography>
@@ -94,11 +96,11 @@ export default function DashboardSidebar({
             </Box>
           </AccountStyle>
         </Link>
-      </Box>
+      </Box >
 
-      <NavSection navConfig={sidebarConfig} />
+      <NavSection navConfig={sidebarConfig} sx={{ backgroundColor: "#1B2144" }}/>
 
-      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ flexGrow: 1, backgroundColor: "#1B2144" }} />
     </Scrollbar>
   );
 

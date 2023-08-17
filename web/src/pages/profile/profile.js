@@ -148,6 +148,7 @@ export default function Profile() {
             borderColor: grey[300],
             p: 4,
             mt: 3,
+            backgroundColor: "white"
           }}
         >
           <Typography variant="h4" gutterBottom>
@@ -268,7 +269,8 @@ export default function Profile() {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth
+                  
+                  //fullWidth
                 >
                   Actualizar
                 </Button>

@@ -12,7 +12,7 @@ export default function Logo({ sx }) {
   return (
     <Box
       component="img"
-      src="/static/condor_logo.png"
+      src="/static/_condor_logo.png"
       sx={{ width: 230, height: 70, ...sx }}
     />
   );

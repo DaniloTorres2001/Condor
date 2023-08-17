@@ -20,8 +20,8 @@ export default function Dashboard() {
           style={{ minHeight: '100vh' }}
         > 
           <Grid item xs={3}>
-            <Box sx={{ pb: 8 }}>
-              <img src="/static/condor_p_a.jpg" width="1400" height="800"/>                        
+            <Box sx={{ pb: 8, m:8, mt:0, mb:0}}>
+              <img src="/static/condor_p_a.png" width="1400" height="800"/>                        
             </Box> 
           </Grid>   
         </Grid> 
