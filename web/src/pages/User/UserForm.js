@@ -40,8 +40,8 @@ export default function UserForm({
   onOpenSnackbar,
 }) {
   const [roles, setRoles] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  const [families, setFamilies] = useState([]);
+  const [urbanizations, setUrbanizations] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({});
   // files
@@ -74,8 +74,8 @@ export default function UserForm({
   }, []);
 
   useEffect(() => {
-    if (user?.user?.roles.includes("001")) fetchOrganizations();
-    if (user?.user?.roles.includes("002")) fetchGroups();
+    if (user?.user?.roles.includes("001")) fetchUrbanizations();
+    if (user?.user?.roles.includes("002")) fetchFamilies();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -95,9 +95,9 @@ export default function UserForm({
     }
   };
 
-  const fetchOrganizations = async () => {
+  const fetchUrbanizations = async () => {
     const response = await sendRequest(
-      `${urlApi}/organizations`,
+      `${urlApi}/urbanizations`,
       null,
       "GET",
       true
@@ -105,7 +105,7 @@ export default function UserForm({
 
     if (!response.error) {
       if (!response.data?.error) {
-        setOrganizations(response.data?.results);
+        setUrbanizations(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -116,11 +116,11 @@ export default function UserForm({
     }
   };
 
-  const fetchGroups = async () => {
-    const response = await sendRequest(`${urlApi}/groups`, null, "GET", true);
+  const fetchFamilies = async () => {
+    const response = await sendRequest(`${urlApi}/families`, null, "GET", true);
     if (!response.error) {
       if (!response.data?.error) {
-        setGroups(response.data?.results?.groups);
+        setFamilies(response.data?.results?.families);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -185,12 +185,12 @@ export default function UserForm({
       phone: userUpdate?.details?.phone ?? "",
       email: userUpdate?.email ?? "",
       password: "",
-      group:
-        groups?.filter((group) => userUpdate?.groups.includes(group.code)) ??
+      family:
+        families?.filter((family) => userUpdate?.families.includes(family.code)) ??
         [],
-      organization:
-        organizations?.organizations?.find(
-          (organization) => organization.code === userUpdate?.codeOrganization
+      urbanization:
+        urbanizations?.urbanizations?.find(
+          (urbanization) => urbanization.code === userUpdate?.codeUrbanization
         ) ?? {},
 
       role: userUpdate?.roles[0] ?? "",
@@ -223,9 +223,9 @@ export default function UserForm({
 
       if (
         values.role === "002" &&
-        formik.initialValues.organization !== values.organization
+        formik.initialValues.urbanization !== values.urbanization
       ) {
-        formData.append("codeOrganization", values.organization?.code);
+        formData.append("codeUrbanization", values.urbanization?.code);
       }
       // if Profile Image is append
       if (imageProfile?.image?.file)
@@ -246,11 +246,11 @@ export default function UserForm({
         details = { ...details, driver: values?.driver };
 
         if (!updating) {
-          formData.append("codeOrganization", user?.user?.codeOrganization);
+          formData.append("codeUrbanization", user?.user?.codeUrbanization);
         }
 
-        if (formik.initialValues.group !== values.group)
-          values.group.forEach((e) => formData.append("codeGroup[]", e.code));
+        if (formik.initialValues.family !== values.family)
+          values.family.forEach((e) => formData.append("codeFamily[]", e.code));
 
         if (values?.driver) {
           if (
@@ -499,26 +499,26 @@ export default function UserForm({
                 <Autocomplete
                   multiple
                   size="small"
-                  id="group"
-                  name="group"
-                  options={groups}
+                  id="family"
+                  name="family"
+                  options={families}
                   isOptionEqualToValue={(option, value) => {
                     return option.code === value.code;
                   }}
                   getOptionLabel={(option) => option.name}
-                  value={formik.values.group}
+                  value={formik.values.family}
                   onChange={(e, value) => {
                     formik.setFieldValue(
-                      "group",
-                      value ?? formik.initialValues.group
+                      "family",
+                      value ?? formik.initialValues.family
                     );
                   }}
                   renderInput={(params) => (
                     <TextField
                       error={
-                        formik.touched.group && Boolean(formik.errors.group)
+                        formik.touched.family && Boolean(formik.errors.family)
                       }
-                      helperText={formik.touched.group && formik.errors.group}
+                      helperText={formik.touched.family && formik.errors.family}
                       {...params}
                       label="Familia"
                       placeholder="-"
@@ -532,29 +532,29 @@ export default function UserForm({
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   size="small"
-                  id="organization"
-                  name="organization"
+                  id="urbanization"
+                  name="urbanization"
                   isOptionEqualToValue={(option, value) =>
                     option.code === value?.code ||
                     Object.keys(value)?.length === 0
                   }
-                  options={organizations?.organizations}
+                  options={urbanizations?.urbanizations}
                   getOptionLabel={(option) => option?.name ?? ""} // Requiere un string ('label') para ser mostrado
-                  value={formik.values.organization}
+                  value={formik.values.urbanization}
                   onChange={(e, value) => {
                     formik.setFieldValue(
-                      "organization",
-                      value ?? formik.initialValues.organization
+                      "urbanization",
+                      value ?? formik.initialValues.urbanization
                     );
                   }}
                   renderInput={(params) => (
                     <TextField
                       error={
-                        formik.touched.group &&
-                        Boolean(formik.errors.organization)
+                        formik.touched.family &&
+                        Boolean(formik.errors.urbanization)
                       }
                       helperText={
-                        formik.touched.group && formik.errors.organization
+                        formik.touched.family && formik.errors.urbanization
                       }
                       {...params}
                       label="Urbanización"

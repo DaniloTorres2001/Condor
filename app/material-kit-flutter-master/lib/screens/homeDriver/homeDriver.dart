@@ -150,10 +150,11 @@ class _HomeDriverState extends State<HomeDriver> with WidgetsBindingObserver {
 
   Card buildCardItem(CarRide element, BuildContext context) {
     double distanceBetween = Geolocator.distanceBetween(
-        element.coordinates!['originLatitude'],
-        element.coordinates!['originLongitude'],
-        position?.latitude ?? element.coordinates!['originLatitude'],
-        position?.longitude ?? element.coordinates!['originLongitude']) / 1000;
+            element.coordinates!['originLatitude'],
+            element.coordinates!['originLongitude'],
+            position?.latitude ?? element.coordinates!['originLatitude'],
+            position?.longitude ?? element.coordinates!['originLongitude']) /
+        1000;
     var user = element.user;
     var rating = int.parse(user!.pointsPassenger ?? '0') /
         int.parse(user.careers ?? '0');
@@ -168,7 +169,8 @@ class _HomeDriverState extends State<HomeDriver> with WidgetsBindingObserver {
             title: textCustom(
                 '${element.user!.fullName} (${rating.toStringAsFixed(1)})',
                 isBold: true,
-                size: 18, colorV: Colors.blue),
+                size: 18,
+                colorV: Colors.blue),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -180,7 +182,7 @@ class _HomeDriverState extends State<HomeDriver> with WidgetsBindingObserver {
             ),
             leading: Text(
                 '${double.parse(distanceBetween.toString().replaceAll(RegExp(r'\.[0-9]+'), ''))} Km'),
-            trailing: Text('\$${element.tip}'),
+            trailing: Text('\$${element.pay}'),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -268,7 +270,7 @@ class _HomeDriverState extends State<HomeDriver> with WidgetsBindingObserver {
   Future<List<CarRide>> getTravels() async {
     var allSecureStorage = await getAllSecureStorage();
     return CarRide.getCarRideAllDriver(
-        allSecureStorage['codeOrganization'] ?? '0', '1');
+        allSecureStorage['codeUrbanization'] ?? '0', '1');
   }
 
   Future<bool> configDriver(String id, String driver,

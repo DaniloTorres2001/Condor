@@ -1,3 +1,5 @@
+/** @format */
+
 import * as React from "react";
 import "./styles/login.css";
 import Button from "@mui/material/Button";
@@ -45,7 +47,7 @@ const LoginFormScheme = Yup.object().shape({
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-
+  const [restoreFLag, setRestoreFLag] = useState(false);
   const [snackBar, setSnackBar] = useState({});
 
   const onCloseSnackbar = () => {
@@ -56,6 +58,20 @@ export default function Login() {
     setShowPassword((show) => !show);
   };
 
+  const themetipogr = createTheme({
+    typography: {
+      h6: {
+        fontSize: "0.8rem",
+        textAlign: "right",
+        color: "#007BFF",
+        cursor: "pointer",
+        textDecoration: "underline",
+      },
+    },
+  });
+  const handleRedirect = () => {
+    navigate("/forget-password", { replace: true });
+  };
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -88,9 +104,11 @@ export default function Login() {
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
 
         setSnackBar({ opened: true, message: errorMessage, type: "error" });
+        setRestoreFLag(true);
       }
     } else {
       setSnackBar({ opened: true, message: response.message, type: "error" });
+      setRestoreFLag(true);
     }
   };
 

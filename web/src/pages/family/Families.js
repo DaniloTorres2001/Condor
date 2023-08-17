@@ -1,3 +1,5 @@
+/** @format */
+
 import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import plusFill from "@iconify/icons-eva/plus-fill";
@@ -35,13 +37,11 @@ import { sendRequest } from "../../utils/utils";
 
 import CustomSnackbar from "../../components/app/CustomSnackbar";
 
-export default function Groups() {
-  const [groups, setGroups] = useState([]);
-  const [pagos, setPagos] = useState([]);
+export default function Families() {
+  const [families, setFamilies] = useState([]);
+  const [valuesPerMonth, setValuesPerMonth] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState({});
-
-  
+  const [selectedFamily, setSelectedFamily] = useState({});
 
   // Pagination
   const [page, setPage] = useState(0);
@@ -58,16 +58,16 @@ export default function Groups() {
   };
 
   useEffect(() => {
-    fetchGroups(page, rowsPerPage);
-    fetchPagos(page, rowsPerPage);
+    fetchFamilies(page, rowsPerPage);
+    fetchValuesPerMonth(page, rowsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
 
-  const fetchGroups = async (pages, row, filterSearch) => {
+  const fetchFamilies = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/groups?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/families?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -76,7 +76,7 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setGroups(response.data?.results);
+        setFamilies(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -88,11 +88,11 @@ export default function Groups() {
     }
   };
 
-  const fetchPagos = async (pages, row, filterSearch) => {
+  const fetchValuesPerMonth = async (pages, row, filterSearch) => {
     const condition = filterSearch ? `&search=${filterSearch}` : "";
 
     const response = await sendRequest(
-      `${urlApi}/pagos?page=${pages}&size=${row}${condition}`,
+      `${urlApi}/valuesPerMonth?page=${pages}&size=${row}${condition}`,
       null,
       "GET",
       true
@@ -101,7 +101,8 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        setPagos(response.data?.results);
+        setValuesPerMonth(response.data?.results);
+        console.log(response.data?.results);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -113,8 +114,8 @@ export default function Groups() {
     }
   };
 
-  const handleOpenDeleteDialog = (group) => {
-    setSelectedGroup(group);
+  const handleOpenDeleteDialog = (family) => {
+    setSelectedFamily(family);
     setDeleteDialog(true);
   };
 
@@ -132,12 +133,12 @@ export default function Groups() {
   };
 
   const handleFilterSearch = (filterSearch) => {
-    fetchPagos(page, rowsPerPage, filterSearch);
+    fetchValuesPerMonth(page, rowsPerPage, filterSearch);
   };
 
-  const handleDeleteGroup = async () => {
+  const handleDeleteFamily = async () => {
     const response = await sendRequest(
-      `${urlApi}/groups/${selectedGroup.id}`,
+      `${urlApi}/families/${selectedFamily.id}`,
       null,
       "DELETE",
       true
@@ -148,7 +149,7 @@ export default function Groups() {
     if (!response.error) {
       //Response API
       if (!response.data?.error) {
-        fetchGroups(page, rowsPerPage);
+        fetchFamilies(page, rowsPerPage);
       } else {
         const errorMessage =
           response.data?.errors?.map((e) => `-${e}\n`) || response.data.message;
@@ -168,17 +169,17 @@ export default function Groups() {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Está seguro de eliminar el grupo "{selectedGroup?.name}"?
+        Está seguro de eliminar la familia "{selectedFamily?.name}"?
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Si da click en 'aceptar', el grupo se eliminará de manera definitiva y
-          no se podrán revertir los cambios.
+          Si da click en 'aceptar', la familia se eliminará de manera definitiva
+          y no se podrán revertir los cambios.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDeleteDialog}>Cancelar</Button>
-        <Button onClick={handleDeleteGroup} autoFocus>
+        <Button onClick={handleDeleteFamily} autoFocus>
           Aceptar
         </Button>
       </DialogActions>
@@ -214,13 +215,11 @@ export default function Groups() {
         {/* Content */}
 
         <Card>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <SearchBar onFetchData={handleFilterSearch} />
-          <MonthBar />
-        </div>
-          
-          
-          
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <SearchBar onFetchData={handleFilterSearch} />
+            <MonthBar />
+          </div>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -233,69 +232,65 @@ export default function Groups() {
                   <TableCell>Carreras Solicitadas</TableCell>
                   <TableCell>Carreras Realizadas</TableCell>
                   <TableCell>Total a Pagar</TableCell>
+                  <TableCell>Saldo a favor</TableCell>
                   <TableCell>Opciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {groups?.groups?.map((row) => (
-                  <TableRow hover
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell component="th" scope="row">
-                      {row.code}
-                    </TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.address}</TableCell>
-                    <TableCell>${row.alicuota}</TableCell>
-                    <TableCell>
-                      $
-                      {pagos?.pagos?.reduce((acc, row2) => {
-                        if (row2.groupCode === row.code && row2.estado === "pasajero") {
-                          return acc + Number(row2.valor);
-                        }
-                        return acc;
-                      }, 0)}
-                    </TableCell>
-                    <TableCell>
-                      $
-                      {pagos?.pagos?.reduce((acc, row2) => {
-                        if (row2.groupCode === row.code && row2.estado === "conductor") {
-                          return acc + Number(row2.valor);
-                        }
-                        return acc;
-                      }, 0)}
-                    </TableCell>
-                    <TableCell>$
-                      {Number(row.alicuota) + Number(pagos?.pagos?.reduce((acc, row2) => {
-                          if (row2.groupCode === row.code && row2.estado === "pasajero") {
-                              return acc + Number(row2.valor);
-                          }
-                          return acc;
-                      }, 0)) - Number(pagos?.pagos?.reduce((acc, row2) => {
-                          if (row2.groupCode === row.code && row2.estado === "conductor") {
-                              return acc + Number(row2.valor);
-                          }
-                          return acc;
-                      }, 0))}
-                    </TableCell>
-                    <TableCell style={{ width: 40 }} align="left">
-                      <TableMoreMenu
-                        onDelete={() => handleOpenDeleteDialog(row)}
-                        updateLink={`update/${row.id}`}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {families?.families?.map((row) => {
+                  const matchingValue = valuesPerMonth?.valuesPerMonth?.find(
+                    (row2) => row2.familyCode === row.code
+                  );
+                  const payPassengerValue = matchingValue
+                    ? matchingValue.payPassenger
+                    : 0;
+                  const payDriverValue = matchingValue
+                    ? matchingValue.payDriver
+                    : 0;
+                  const payTotalValue = matchingValue
+                    ? matchingValue.payvalue
+                    : 0;
+
+                  return (
+                    <TableRow
+                      hover
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell>{row.id}</TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.code}
+                      </TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.address}</TableCell>
+                      <TableCell>${row.aliquot}</TableCell>
+                      <TableCell>${payPassengerValue}</TableCell>
+                      <TableCell>${payDriverValue}</TableCell>
+                      <TableCell>
+                        {payTotalValue > 0 ? `$${payTotalValue}` : "0"}
+                      </TableCell>
+                      <TableCell>
+                        {payTotalValue < 0
+                          ? `$${Math.abs(payTotalValue)}`
+                          : "0"}
+                      </TableCell>
+
+                      <TableCell style={{ width: 40 }} align="left">
+                        <TableMoreMenu
+                          onDelete={() => handleOpenDeleteDialog(row)}
+                          updateLink={`update/${row.id}`}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
-              
             </Table>
           </TableContainer>
 
           <TablePagination
             component="div"
-            count={groups?.pagination?.totalItems ?? 0}
+            count={families?.pagination?.totalItems ?? 0}
             page={page}
             labelRowsPerPage={"Items por página"}
             onPageChange={handleChangePage}

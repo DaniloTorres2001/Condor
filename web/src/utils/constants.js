@@ -42,11 +42,11 @@ export const validationErrors = {
       max: "La longitud máxima es de 50 caracteres.",
     },
     role: { required: "Debe seleccionar el rol." },
-    organization: { required: "Debe seleccionar la urbanización." },
-    group: { required: "Debe seleccionar la familia." },
+    urbanization: { required: "Debe seleccionar la urbanización." },
+    family: { required: "Debe seleccionar la familia." },
   },
 
-  group: {
+  family: {
     code: {
       required: "El código es requerido.",
       max: "La longitud máxima es de 25 caracteres.",
@@ -59,12 +59,12 @@ export const validationErrors = {
       required: "La dirección es requerida.",
       max: "La longitud máxima es de 100 caracteres.",
     },
-    alicuota: {
+    aliquot: {
       required: "El valor de la alicuota es requerida",
     },
   },
 
-  organization: {
+  urbanization: {
     code: {
       required: "El código es requerido.",
       max: "La longitud máxima es de 25 caracteres.",

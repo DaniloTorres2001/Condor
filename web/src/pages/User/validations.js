@@ -33,16 +33,16 @@ export const UserCreateScheme = Yup.object().shape({
       then: Yup.string().required(validationErrors.user.password.required),
     }),
 
-  organization: Yup.object().test(
-    "validate-organization",
-    validationErrors.user.organization.required,
+  urbanization: Yup.object().test(
+    "validate-urbanization",
+    validationErrors.user.urbanization.required,
     (value, testContext) =>
       !(testContext.parent.role === "002" && Object.keys(value).length === 0)
   ),
 
-  group: Yup.array().test(
-    "validate-group",
-    validationErrors.user.group.required,
+  family: Yup.array().test(
+    "validate-family",
+    validationErrors.user.family.required,
     (value, testContext) =>
       !(testContext.parent.role === "003" && value?.length === 0)
   ),

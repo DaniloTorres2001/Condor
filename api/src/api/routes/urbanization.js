@@ -9,7 +9,7 @@ const {
   create,
   update,
   destroy,
-} = require("../controllers/organization");
+} = require("../controllers/urbanization");
 
 router
   .get("/", verifyJWT, canAccess([constants.ROLES.superAdministrator]), getAll)

@@ -5,40 +5,40 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { validationErrors } from "../../utils/constants";
 
-const OrganizationFormScheme = Yup.object().shape({
+const UrbanizationFormScheme = Yup.object().shape({
   code: Yup.string()
-    .max(25, validationErrors.organization.code.max)
-    .required(validationErrors.organization.code.required),
+    .max(25, validationErrors.urbanization.code.max)
+    .required(validationErrors.urbanization.code.required),
   name: Yup.string()
-    .max(75, validationErrors.organization.name.max)
-    .required(validationErrors.organization.name.required),
+    .max(75, validationErrors.urbanization.name.max)
+    .required(validationErrors.urbanization.name.required),
   address: Yup.string()
-    .max(100, validationErrors.organization.address.max)
-    .required(validationErrors.organization.address.required),
+    .max(100, validationErrors.urbanization.address.max)
+    .required(validationErrors.urbanization.address.required),
 });
 
-export default function OrganizationForm({
+export default function UrbanizationForm({
   onSubmitForm,
-  organizationUpdate,
+  urbanizationUpdate,
   updating,
 }) {
   const formik = useFormik({
     initialValues: {
-      code: organizationUpdate?.code ?? "",
-      name: organizationUpdate?.name ?? "",
-      address: organizationUpdate?.address ?? "",
+      code: urbanizationUpdate?.code ?? "",
+      name: urbanizationUpdate?.name ?? "",
+      address: urbanizationUpdate?.addreurb?? "",
     },
     enableReinitialize: true,
-    validationSchema: OrganizationFormScheme,
+    validationSchema: UrbanizationFormScheme,
 
     onSubmit: (values) => {
-      const organizationData = {
+      const urbanizationData = {
         ...(!updating && { code: values.code }),
         name: values.name,
         address: values.address,
       };
 
-      onSubmitForm(organizationData);
+      onSubmitForm(urbanizationData);
     },
   });
 

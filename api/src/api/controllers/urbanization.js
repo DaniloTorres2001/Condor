@@ -1,5 +1,5 @@
-const { validateOrganization } = require("../validations/organization");
-const { Organization } = require("../models");
+const { validateUrbanization } = require("../validations/urbanization");
+const { Urbanization } = require("../models");
 const { Op } = require("sequelize");
 const { getPagination, getPagingData } = require("../utils/pagination");
 
@@ -23,7 +23,7 @@ const getAll = async (req, res) => {
 
     const { limit, offset } = getPagination(page, size);
 
-    const { count, rows } = await Organization.findAndCountAll({
+    const { count, rows } = await Urbanization.findAndCountAll({
       where: condition,
       offset: offset,
       limit: limit,
@@ -34,7 +34,7 @@ const getAll = async (req, res) => {
     return res.status(200).json(
       successResponse("Success!", {
         pagination,
-        organizations: rows,
+        urbanizations: rows,
       })
     );
   } catch (error) {
@@ -48,8 +48,8 @@ const get = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const organization = await Organization.findOne({ where: { id: id } });
-    return res.status(200).json(successResponse("Success", { organization }));
+    const urbanization = await Urbanization.findOne({ where: { id: id } });
+    return res.status(200).json(successResponse("Success", { urbanization }));
   } catch (err) {
     return res
       .status(500)
@@ -58,7 +58,7 @@ const get = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { error } = validateOrganization(req.body);
+  const { error } = validateUrbanization(req.body);
 
   if (error)
     return res
@@ -66,22 +66,22 @@ const create = async (req, res) => {
       .json(validationResponse(error.details.map((e) => e.message)));
 
   try {
-    const organization = await Organization.findOne({
+    const urbanization = await Urbanization.findOne({
       where: {
         [Op.or]: { code: req.body.code, name: req.body.name },
       },
     });
 
-    if (organization)
+    if (urbanization)
       return res
         .status(422)
         .json(validationResponse(["Código o nombre ya existen."]));
 
-    const savedOrganization = await Organization.create(req.body);
+    const savedUrbanization = await Urbanization.create(req.body);
 
     return res.status(201).json(
-      successResponse("Organización creada!", {
-        organization: savedOrganization,
+      successResponse("Urbanización creada!", {
+        urbanization: savedUrbanization,
       })
     );
   } catch (err) {
@@ -95,18 +95,18 @@ const destroy = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const num = await Organization.destroy({ where: { id: id } });
+    const num = await Urbanization.destroy({ where: { id: id } });
 
     if (num != 1)
       return res
         .status(400)
         .json(
-          validationResponse([`No puede eliminar la organización con id=${id}`])
+          validationResponse([`No puede eliminar la urbanización con id=${id}`])
         );
 
     return res
       .status(200)
-      .json(successResponse("La organización fué eliminada exitosamente.", {}));
+      .json(successResponse("La urbanización fué eliminada exitosamente.", {}));
   } catch (err) {
     return res
       .status(500)
@@ -115,7 +115,7 @@ const destroy = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { error } = validateOrganization(req.body, true);
+  const { error } = validateUrbanization(req.body, true);
 
   if (error)
     return res
@@ -125,7 +125,7 @@ const update = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const [num, organizationUpdated] = await Organization.update(req.body, {
+    const [num, urbanizationUpdated] = await Urbanization.update(req.body, {
       where: { id: id },
       returning: true,
     });
@@ -135,13 +135,13 @@ const update = async (req, res) => {
         .status(400)
         .json(
           validationResponse([
-            `No puede actualizar la organización con id=${id}`,
+            `No puede actualizar la urbanización con id=${id}`,
           ])
         );
 
     return res.status(200).json(
-      successResponse("La organización fue actualizada exitosamente.", {
-        organization: organizationUpdated,
+      successResponse("La urbanización fue actualizada exitosamente.", {
+        urbanization: urbanizationUpdated,
       })
     );
   } catch (err) {

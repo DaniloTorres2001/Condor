@@ -8,8 +8,8 @@ const userCreateValidation = (data) => {
     password: Joi.string().min(5).max(40).required(),
     idCard: Joi.string().max(15).required(),
     codeRole: Joi.array().items(Joi.string()).min(1).required(),
-    codeOrganization: Joi.string().max(25),
-    codeGroup: Joi.array().items(Joi.string()).min(1),
+    codeUrbanization: Joi.string().max(25),
+    codeFamily: Joi.array().items(Joi.string()).min(1),
     details: Joi.object(),
     session: Joi.object(),
     // Images
@@ -25,9 +25,9 @@ const userUpdateValidation = (data) => {
   const schema = Joi.object({
     email: Joi.string().email(),
     password: Joi.string().min(5).max(40),
-    codeGroup: Joi.array().items(Joi.string()).min(1),
+    codeFamily: Joi.array().items(Joi.string()).min(1),
     codeRole: Joi.array().items(Joi.string()).min(1),
-    codeOrganization: Joi.string().max(25),
+    codeUrbanization: Joi.string().max(25),
     details: Joi.object(),
 
     profileImage: Joi.array().items(Joi.object()).min(1).max(1),
